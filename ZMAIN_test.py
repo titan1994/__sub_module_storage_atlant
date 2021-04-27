@@ -5,10 +5,10 @@
 if __name__ == "__main__":
     # Для тестов
 
-    from pack_core.RUN.PRE_LAUNCH import pre_launch
+    from MODS.rest_core.pack_core.RUN.PRE_LAUNCH import pre_launch
     pre_launch()
 
-    from pack_core.back_core import app
+    from MODS.rest_core.pack_core.back_core import app
     from GENERAL_CONFIG import GeneralConfig, FastApiConfig
 
     if FastApiConfig in GeneralConfig.__bases__:

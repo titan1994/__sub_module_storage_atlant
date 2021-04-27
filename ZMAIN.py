@@ -3,8 +3,8 @@
 """
 
 # Предпусковые операции
-from pack_core.RUN.PRE_LAUNCH import APP_INIT
+from MODS.rest_core.pack_core.RUN.PRE_LAUNCH import APP_INIT
 
 # Импорт приложения на запуск
-from pack_core.back_core import app
+from MODS.rest_core.pack_core.back_core import app
 

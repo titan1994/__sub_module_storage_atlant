@@ -1,6 +1,6 @@
 """
 Основная конфигурация проекта.
-Сначала мы решаем какое ядро используем - потом наследуем его в GeneralConfig
+Собирает в себе все конфигурации подмодулей
 """
 
 from MODS.scripts.python.easy_scripts import PROJECT_GENERAL_FOLDER as general_path
@@ -29,18 +29,18 @@ class NoObjectMixin(ABC):
         pass
 
 
-class FastApiConfig(NoObjectMixin):
+class FastApiSettings(NoObjectMixin):
     """
-    Конфигурация фаст-апи
+    Настройка фаст-апи. Адаптация под проект
     """
+    DEFAULT_AERICH_CFG_PATH = 'MODS.rest_core.pack_core.aerich_proc.config.TORTOISE_ORM'
+    DEFAULT_DB_URI = None
 
-    """
-    AERICH + TORTOISE
-    """
 
-    # путь по регламенту тортоиса к конфигуратору тортоиса (В МОДУЛЕ РАСКОММЕНТИРОВАТЬ ПЕРВОЕ!)
-    # DEFAULT_AERICH_CFG_PATH = 'MODS.rest_core.pack_core.aerich_proc.config.TORTOISE_ORM'
-    DEFAULT_AERICH_CFG_PATH = 'pack_core.aerich_proc.config.TORTOISE_ORM'
+class FastApiConfig(FastApiSettings):
+    """
+    Статичная конфигурация фаст-апи
+    """
 
     # Основная папка с моделями тортоиса
     DEFAULT_AERICH_MODEL_PACK_PATH = '__fast_api_app.models'
@@ -57,22 +57,24 @@ class FastApiConfig(NoObjectMixin):
         general_path / DEFAULT_AERICH_MODEL_PACK_PATH.replace('.', '/') / 'general'
 
 
-"""
-Наследованием выбираем ядро-фреймворк. 
-Дописываем общие для всех фреймворков параметры конфигурации
-"""
+class AtlantStorageCfg:
+    """
+    Конфигурация хранилища
+    """
+    JAVA_KEY_VALUE_JSONB_URL = None
+    CLICKHOUSE_SHOWCASE_URL = None
+    KAFKA_URL = None
+    YCL_KAFKA_URL = None
 
 
-class GeneralConfig(FastApiConfig):
+class GeneralConfig(FastApiConfig, AtlantStorageCfg):
     """
     Общая конфа - она импортируется по проекту
     """
-    PROJECT_NAME = 'Ядро фаст апи. Submodule'  # Open API спецификация чувствительна к имени - будьте осторожны
+    PROJECT_NAME = 'СМПБ. Паспорт Фермера'  # Open API спецификация чувствительна к имени - будьте осторожны
     DEFAULT_APP_MODE = AppMode.debug
     DEFAULT_PORT = 5111  # Порт
 
-    DEFAULT_DB_URI = None
     ITS_DOCKER = None
-
     PROJECT_GENERAL_FOLDER = general_path
     DEFAULT_WORKER_COUNT = cpu_count() + 1
