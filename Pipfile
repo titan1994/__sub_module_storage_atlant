@@ -33,6 +33,7 @@ hypercorn = "*"
 #DATA BASE FRIVERS
 #asyncpg = "*"
 asynch = "*"
+clickhouse-driver = "*"
 # DOT ENV
 python-dotenv = "*"
 # EXEL XLSX Driver

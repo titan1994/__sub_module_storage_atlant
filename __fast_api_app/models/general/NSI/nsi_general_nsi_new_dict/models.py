@@ -6,7 +6,8 @@ class ORM_nsi_general_nsi_new_dict(models.Model):
     """
     супер инфа
     """
-
+    __original_dict_name__ = 'new_dict'
+    __original_client_name__ = 'general_nsi'
     
     # ИНН
     INN777 = fields.CharField(

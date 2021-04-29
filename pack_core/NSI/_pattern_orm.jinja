@@ -6,6 +6,8 @@ class ORM_{{name_model}}(models.Model):
     """
     {{comment_model}}
     """
+    __original_dict_name__ = '{{name_dict}}'
+    __original_client_name__ = '{{name_client}}'
 
     {% for column in columns %}
     # {{column['comment']}}

@@ -71,7 +71,7 @@ class GeneralConfig(FastApiConfig, AtlantStorageCfg):
     """
     Общая конфа - она импортируется по проекту
     """
-    PROJECT_NAME = 'СМПБ. Паспорт Фермера'  # Open API спецификация чувствительна к имени - будьте осторожны
+    PROJECT_NAME = 'ХРАНИЛИЩЕ АТЛАНТ. ПОДМОДУЛЬ'  # Open API спецификация чувствительна к имени - будьте осторожны
     DEFAULT_APP_MODE = AppMode.debug
     DEFAULT_PORT = 5111  # Порт
 

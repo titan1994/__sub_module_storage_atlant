@@ -6,6 +6,7 @@ from json import dump as jsd, load as jsl
 from pathlib import Path
 from os import getenv
 from shutil import rmtree
+
 parent_folder = Path(__file__).parent.parent
 
 from tortoise.backends.base.config_generator import expand_db_url
@@ -24,7 +25,6 @@ from ..main import \
     DEFAULT_META_NAME_DICTS, DEFAULT_OLD_INFO_DICT_META_COLUMNS, DEFAULT_YCL_PRIM_KEY_FUNC_TYPES
 
 from MODS.standart_namespace.models import get_project_prefix
-
 
 TEST_POST_FILE = parent_folder / \
                  'data' / 'models' / 'api' / 'Dictionary_Settings' / '__post_add_or_update.json'
@@ -344,7 +344,9 @@ async def process_orm(data_json, is_repair=False):
 
                 dict_repair[dict_name] = {
                     'columns': columns,
-                    'dict_comment': dict_comment
+                    'dict_comment': dict_comment,
+                    'name_dict': dict_name,
+                    'name_client': client_key,
                 }
 
                 report_dict['process_data'] = True
@@ -354,7 +356,9 @@ async def process_orm(data_json, is_repair=False):
                     columns=columns,
                     model_name=model_name,
                     dict_comment=dict_comment,
-                    client_folder=client_folder
+                    client_folder=client_folder,
+                    name_dict=dict_name,
+                    name_client=client_key,
                 )
 
                 #   Подготовка данных для кликхауса
@@ -406,7 +410,7 @@ async def process_orm(data_json, is_repair=False):
     return step_by_step, response_orm_processing
 
 
-def create_orm_gen(columns, model_name, dict_comment, client_folder):
+def create_orm_gen(columns, model_name, dict_comment, client_folder, name_dict, name_client):
     """
     Автогенератор классов ОРМ
     """
@@ -417,7 +421,9 @@ def create_orm_gen(columns, model_name, dict_comment, client_folder):
     render_orm = create_jinja_dict_for_python(
         columns=columns,
         model_name=proc_model_name,
-        dict_comment=dict_comment
+        dict_comment=dict_comment,
+        name_dict=name_dict,
+        name_client=name_client
     )
 
     #   Pydantic
@@ -456,7 +462,7 @@ def create_ycl_req_gen(columns, model_name):
     return ycl_req
 
 
-def create_jinja_dict_for_python(columns, model_name, dict_comment):
+def create_jinja_dict_for_python(columns, model_name, dict_comment, name_dict, name_client):
     """
     Создает словарь-рендер для ОРМ-класса на питоне
     """
@@ -465,7 +471,9 @@ def create_jinja_dict_for_python(columns, model_name, dict_comment):
     jinja_dict = {
         'name_model': model_name,
         'comment_model': dict_comment,
-        'columns': jinja_columns
+        'columns': jinja_columns,
+        'name_dict': name_dict,
+        'name_client': name_client,
     }
 
     for column in columns:
@@ -682,7 +690,9 @@ async def bridge_smart_delete_dictionaries(data_json):
                         'columns': delete_dict['columns'],
                         'model_name': model_name,
                         'dict_comment': delete_dict['comment'],
-                        'client_folder': client_folder
+                        'client_folder': client_folder,
+                        'name_dict': dict_name,
+                        'name_client': client_key,
                     }
                 )
 
