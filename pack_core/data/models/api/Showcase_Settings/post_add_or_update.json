@@ -3,7 +3,8 @@
     "string (system name showcase)": {
       "human_name": "string",
       "relation_dicts": {
-        "string (full_dict_name or dict_name_this_client)": {
+        "string (dict_name)": {
+          "client_name": "name client of dictionary (delete or empty if dictionary this client)",
           "ignore_or_using_list": "bool True-ignore(all except columns_list) False-use (only in the columns_list)",
           "columns_list": [
             "string (name column dict)"

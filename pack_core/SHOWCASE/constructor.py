@@ -1,8 +1,4 @@
-import asyncio
-from json import dump as jsd, load as jsl
 from uuid import uuid4
-from pathlib import Path
-parent_folder = Path(__file__).parent.parent
 
 from MODS.scripts.python.jinja import jinja_render_str_to_str
 from MODS.scripts.python.dict_proc import get_dict_difference, recombine_dict
@@ -28,11 +24,7 @@ from ..psql_jsonb.connector import \
 
 from MODS.standart_namespace.models import get_project_prefix
 
-TEST_POST_FILE = parent_folder / \
-                 'data' / 'models' / 'api' / 'Showcase_Settings' / '__post_add_or_update.json'
 
-TEST_DEL_FILE = parent_folder / \
-                'data' / 'models' / 'api' / 'Showcase_Settings' / '__delete.json'
 """
 Создание витрины данных + Мега апдейт 
 """
@@ -183,8 +175,12 @@ async def smart_create_showcases(json_data):
                 list_dict_tables = []
                 if relation_to_dict:
                     # Воссоздание имён словарей
-                    for key in relation_to_dict.keys():
-                        table_dict = adaptation_dict_name(client_key=client_key, key_name=key)
+                    for key, data_dict in relation_to_dict.items():
+                        dict_key = data_dict.get('client_name')
+                        if not dict_key:
+                            dict_key = client_key
+
+                        table_dict = adaptation_dict_name(client_key=dict_key, key_name=key)
                         list_dict_tables.append(table_dict)
 
                 topic_name = gen_kafka_topic_name(
@@ -737,10 +733,8 @@ def adaptation_dict_name(client_key, key_name):
     """
     Адаптация разделённого имени словаря к полному
     """
-    proj_prefix = get_project_prefix()
-    table_dict = key_name
-    if table_dict.find(proj_prefix) == -1:
-        table_dict = gen_dict_table_name(client_key=client_key, name_dict=table_dict)
+
+    table_dict = gen_dict_table_name(client_key=client_key, name_dict=key_name)
     return table_dict
 
 
@@ -785,7 +779,12 @@ def ycl_generate_column_showcase(client_key, column_input, relation_dicts, meta_
             "{% else %}{% set ns.first = True %}{% endif%}{{expr}}{% endfor %}))"
 
         for dict_name_raw, rel_data in relation_dicts.items():
-            dict_name = adaptation_dict_name(client_key=client_key, key_name=dict_name_raw)
+
+            dict_key = rel_data.get('client_name')
+            if not dict_key:
+                dict_key = client_key
+
+            dict_name = adaptation_dict_name(client_key=dict_key, key_name=dict_name_raw)
             meta_columns = meta_data.get(dict_name)
             if not meta_columns:
                 # Возможно это важно. Но если нет метаданных словаря - считаем что его просто нет
@@ -1077,41 +1076,7 @@ async def smart_delete_showcases(json_data):
     return summary_result
 
 
-"""
-Пилотные тесты
-"""
 
 
-async def test_get_metadata():
-    """
-    Получение метаданных из кликхауса
-    """
 
-    out_tables = await get_ycl_metadata()
-    with open('z_send_get_meta_ycl.json', 'w', encoding='utf-8') as fb:
-        jsd(out_tables, fb, ensure_ascii=False, indent=4)
-
-
-async def test_processing_post_create():
-    """
-    Тестирование создания витрины данных
-    """
-    with open(TEST_POST_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await smart_create_showcases(json_data=input_data)
-    with open('z_send_insert_showcase.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
-
-
-async def test_processing_delete():
-    """
-    Тестирование удаления витрины данных
-    """
-    with open(TEST_DEL_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await smart_delete_showcases(json_data=input_data)
-    with open('z_send_delete_showcase.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
 

@@ -1,14 +1,10 @@
 """
 Описывает процедуры генерации/удаления моделей ОРМ (они же НСИ)
 """
-import asyncio
-from json import dump as jsd, load as jsl
+
 from pathlib import Path
 from os import getenv
 from shutil import rmtree
-
-parent_folder = Path(__file__).parent.parent
-
 from tortoise.backends.base.config_generator import expand_db_url
 
 from MODS.scripts.python.jinja import jinja_render_to_file
@@ -25,12 +21,6 @@ from ..main import \
     DEFAULT_META_NAME_DICTS, DEFAULT_OLD_INFO_DICT_META_COLUMNS, DEFAULT_YCL_PRIM_KEY_FUNC_TYPES
 
 from MODS.standart_namespace.models import get_project_prefix
-
-TEST_POST_FILE = parent_folder / \
-                 'data' / 'models' / 'api' / 'Dictionary_Settings' / '__post_add_or_update.json'
-
-TEST_DEL_FILE = parent_folder / \
-                'data' / 'models' / 'api' / 'Dictionary_Settings' / '__delete.json'
 
 """
 Конфигурация трансформации типов
@@ -793,43 +783,3 @@ async def app_delete_dict(name):
     res = await ycl.delete_dictionary(conn=conn, name=name)
 
     return res
-
-
-"""
-Пилотные тесты
-"""
-
-
-async def test_processing_post_create():
-    """
-    Тестирование создания витрины данных
-    """
-    with open(TEST_POST_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await bridge_smart_create_dictionaries(json_data=input_data)
-    with open('z_send_insert_dict.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
-
-
-async def test_processing_delete():
-    """
-    Тестирование удаления витрины данных
-    """
-
-    with open(TEST_DEL_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await bridge_smart_delete_dictionaries(json_data=input_data)
-    with open('z_send_delete_dict.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
-
-#
-# if __name__ == '__main__':
-#     """
-#     Тест
-#     """
-#
-#     ioloop = asyncio.get_event_loop()
-#     ioloop.run_until_complete(test_processing_post_create())
-#     # ioloop.run_until_complete(test_processing_delete())

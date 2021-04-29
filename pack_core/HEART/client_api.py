@@ -4,13 +4,6 @@
 генератора словарей и генератора витрин
 """
 
-import asyncio
-from json import dump as jsd, load as jsl
-from pathlib import Path
-parent_folder = Path(__file__).parent.parent
-
-from GENERAL_CONFIG import GeneralConfig
-
 from ..main import \
     DEFAULT_META_NAME_SHOWCASE, \
     DEFAULT_META_NAME_DICTS, \
@@ -21,12 +14,6 @@ from ..SHOWCASE.constructor import smart_create_showcases, smart_delete_showcase
 
 from ..psql_jsonb.connector import \
     create_or_update_client, get_client, delete_client
-
-TEST_POST_FILE = parent_folder / \
-                 'data' / 'models' / 'api' / 'Client_Settings' / '__post_add_update.json'
-
-TEST_DEL_FILE = parent_folder / \
-                'data' / 'models' / 'api' / 'Client_Settings' / '__delete.json'
 
 """
 Создание/Обновление клиентов
@@ -192,38 +179,3 @@ async def smart_delete_client(json_data):
 
         summary_report[client_key] = report_client
     return summary_report
-
-
-"""
-Получение списков клиентов, их метаданных и прочего в отдельности
-"""
-
-"""
-Пилотные тесты
-"""
-
-
-async def test_processing_post_create():
-    """
-    Тестирование создания/обновления клиентов
-    """
-    with open(TEST_POST_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await smart_create_client(json_data=input_data)
-    with open('z_send_insert_showcase.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
-
-
-async def test_processing_delete():
-    """
-    Тестирование удаления клиентов
-    """
-    with open(TEST_DEL_FILE, 'r', encoding='utf-8') as file:
-        input_data = jsl(fp=file)
-
-    result = await smart_delete_client(json_data=input_data)
-    with open('z_send_delete_showcase.json', 'w', encoding='utf-8') as fb:
-        jsd(result, fb, ensure_ascii=False, indent=4)
-
-
