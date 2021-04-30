@@ -27,13 +27,3 @@ def get_orm_class(client_key, dict_name):
 
     return None
 
-
-"""
-Пилотные тесты 
-"""
-
-# if __name__ == '__main__':
-#     test_client = 'general_nsi'
-#     test_dict = 'new_dict'
-#     A = get_orm_class(client_key=test_client, dict_name=test_dict)
-#     print(A)
