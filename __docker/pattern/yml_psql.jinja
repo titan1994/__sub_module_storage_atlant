@@ -1,0 +1,20 @@
+  # Постгрес (официальная сборка)
+  {{core_folder}}{{guid}}_postgres:
+    restart: always
+    image: postgres:13
+    container_name: {{core_folder}}{{guid}}_postgres
+    command: postgres -c 'max_connections=5000'
+    ports:
+      - 5432:5432
+    volumes:
+      - psql_{{core_folder}}{{guid}}:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: __test_app_core
+      POSTGRES_USER: __test_app_core
+      POSTGRES_DB: __test_app_core
+{% if ext_ntw %}
+    # внешняя сеть
+{% else %}
+    networks:
+      - ntw_{{core_folder}}{{guid}}
+{% endif %}

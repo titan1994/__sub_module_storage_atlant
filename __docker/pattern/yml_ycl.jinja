@@ -1,0 +1,18 @@
+  # Кликхаус (официальная сборка)
+  {{core_folder}}{{guid}}_clickhouse:
+    image: yandex/clickhouse-server
+    container_name: {{core_folder}}{{guid}}_clickhouse
+    ports:
+      - 8123:8123
+      - 9000:9000
+    volumes:
+      - ./__docker/volumes/clickhouse/cl_db:/var/lib/clickhouse
+
+{% if ext_ntw %}
+    # внешняя сеть
+{% else %}
+    networks:
+      - ntw_{{core_folder}}{{guid}}
+{% endif %}
+
+    restart: on-failure

@@ -1,0 +1,24 @@
+# Действие превое - в командной строке набрать pipenv lock -r > requirements.txt
+version: '3'
+
+
+# Общая сеть между микросервисами
+
+networks:
+  webappnetwork:
+    driver: bridge
+
+# Сервисы
+services:
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 5000:5000
+    networks:
+      - webappnetwork
+    volumes:
+      - ../volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
+

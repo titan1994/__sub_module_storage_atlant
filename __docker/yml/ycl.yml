@@ -1,0 +1,26 @@
+version: '3'
+
+# Общая сеть между микросервисами
+
+networks:
+  webappnetwork:
+    driver: bridge
+
+# Сервисы
+services:
+
+  # Кликхаус (официальная сборка)
+  clickhouse:
+    image: yandex/clickhouse-server
+    container_name: clickhouse
+    ports:
+      - 8123:8123
+      - 9000:9000
+    volumes:
+      - ../volumes/clickhouse/cl_db:/var/lib/clickhouse
+
+    networks:
+      - webappnetwork
+
+
+    restart: on-failure

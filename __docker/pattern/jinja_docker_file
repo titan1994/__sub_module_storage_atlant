@@ -1,0 +1,23 @@
+FROM python:3.8
+
+{% for folder in project_folders %}
+# Копировать. {{folder['comment']}}
+RUN set -ex && mkdir -p /{{core_folder}}/{{folder['name']}}/
+WORKDIR /{{core_folder}}/{{folder['name']}}/
+COPY ./{{folder['name']}} .
+{% endfor %}
+
+# Установка библиотек
+WORKDIR /{{core_folder}}/
+COPY ./{{requirements}}.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install tortoise-orm[accel]
+
+# Открываем волюмы
+VOLUME {% for folder in project_folders %}/{{core_folder}}/{{folder['name']}}/ {% endfor %}
+
+# Открываем порт
+EXPOSE {{port_core}}
+
+# Команда запуска
+{{cmd_run}}

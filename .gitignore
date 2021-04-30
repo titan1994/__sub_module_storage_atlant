@@ -34,3 +34,24 @@ pnpm-debug.log*
 
 
 /MODS/
+# DOCKER VOLUMES. CL
+
+__docker/volumes/clickhouse/cl_db/*
+!__docker/volumes/clickhouse/cl_db/.gitkeep
+
+# DOCKER VOLUMES. KAFKA
+
+__docker/volumes/kafka/k1/*
+!__docker/volumes/kafka/k1/.gitkeep
+
+__docker/volumes/kafka/k2/*
+!__docker/volumes/kafka/k2/.gitkeep
+
+__docker/volumes/kafka/k3/*
+!__docker/volumes/kafka/k3/.gitkeep
+
+__docker/volumes/kafka/zoo/data/*
+!__docker/volumes/kafka/zoo/data/.gitkeep
+
+__docker/volumes/kafka/zoo/log/*
+!__docker/volumes/kafka/zoo/log/.gitkeep

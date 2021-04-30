@@ -1,0 +1,22 @@
+worker_processes {{worker_processes}};
+
+events {
+  worker_connections {{worker_connections}}; # increase if you have lots of clients
+  accept_mutex on; # set to 'on' if nginx worker_processes > 1
+  # 'use epoll;' to enable for Linux 2.6+
+  # 'use kqueue;' to enable for FreeBSD, OSX
+}
+
+http {
+
+    upstream app {
+        server {{core_folder}}{{guid}}:{{port_core}} max_fails={{max_fails}} fail_timeout={{fail_timeout}};
+    }
+    server {
+        listen {{port_core}};
+        location / {
+            proxy_pass   http://app;
+        }
+
+    }
+}

@@ -1,0 +1,100 @@
+version: '3'
+
+{% if use_postgres %}
+#Внешние волюмы
+volumes:
+    psql_{{core_folder}}{{guid}}:
+        external: true
+{% endif %}
+
+{% if ext_ntw %}
+# Общая сеть между разными микросервисами (композами)
+networks:
+  default:
+   external:
+    name: {{ext_ntw}}
+{% else %}
+# Общая сеть внутри этого микросервиса (композа)
+networks:
+  ntw_{{core_folder}}{{guid}}:
+    driver: bridge
+{% endif %}
+
+# Сервисы
+services:
+
+{% if use_postgres %}
+{% include 'yml_psql.jinja' %}
+{% endif %}
+
+{% if use_ycl %}
+{% include 'yml_ycl.jinja' %}
+{% endif %}
+
+{% if use_kafka %}
+{% include 'yml_kafka.jinja' %}
+{% endif %}
+
+  # Ядро
+  {{core_folder}}{{guid}}:
+    build: ./
+    restart: on-failure
+    container_name: {{core_folder}}{{guid}}
+
+    {% if use_nginx %}
+    expose:
+      - {{port_core}}
+    {% else %}
+    ports:
+      - {{port_core}}:{{port_core}}
+    {% endif %}
+
+    volumes:
+    {% for folder in project_folders %}
+     - ./{{folder['name']}}:/{{core_folder}}/{{folder['name']}}/
+    {% endfor %}
+
+    env_file:
+      - .env.development
+
+    environment:
+      ITS_DOCKER: "True"
+
+    depends_on:
+{% if use_postgres %}
+     - {{core_folder}}{{guid}}_postgres
+{% endif %}
+{% if use_ycl %}
+     - {{core_folder}}{{guid}}_clickhouse
+{% endif %}
+{% if use_kafka %}
+     - kafdrop
+{% endif %}
+
+{% if ext_ntw %}
+    # внешняя сеть
+{% else %}
+    networks:
+      - ntw_{{core_folder}}{{guid}}
+{% endif %}
+
+{% if use_nginx %}
+  # Nginx (официальная сборка)
+  {{core_folder}}{{guid}}_nginx:
+    image: nginx
+    container_name: {{core_folder}}{{guid}}_nginx
+    restart: unless-stopped
+    ports:
+      - {{port_core}}:{{port_core}}
+{% if ext_ntw %}
+    # внешняя сеть
+{% else %}
+    networks:
+      - ntw_{{core_folder}}{{guid}}
+{% endif %}
+    volumes:
+      - ./__docker/volumes/nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - {{core_folder}}{{guid}}
+
+{% endif %}
