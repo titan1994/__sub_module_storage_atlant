@@ -5,24 +5,17 @@
 from fastapi import APIRouter, Body
 from MODS.standart_namespace.routes import standardize_response
 
-
-
 router = APIRouter(
-    prefix="/orm",
+    prefix="/settings",
     tags=["ORM-Dictionaries"],
     responses={404: {"description": "Not found"}},
 )
 
 
-class ORMProcessingError(Exception):
-    pass
-
-
-@router.get("/{client_key}/{dict_name}")
+@router.post("/client")
 @standardize_response
-async def orm_get_model_list(client_key: str, dict_name: str):
+async def orm_get_model_list():
     """
-    Универсальное получение списка
+    Создание клиента
     """
-    pass
 

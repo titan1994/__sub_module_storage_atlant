@@ -10,8 +10,8 @@ from json import load as jsl, dump as jsd
 
 
 from MODS.rest_core.pack_core.RUN.PRE_LAUNCH import APP_INIT
-from MODS.MAIN_STRORAGE_BI.pack_core.HEART.client_api import smart_create_client, smart_delete_client
-from MODS.MAIN_STRORAGE_BI.pack_core.psql_jsonb.connector import get_client
+from MODS.storage_atlant_driver.pack_core.HEART.client_api import smart_create_client, smart_delete_client
+from MODS.storage_atlant_driver.pack_core.psql_jsonb.connector import get_client
 
 
 parent_folder = Path(__file__).parent.parent

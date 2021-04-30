@@ -11,7 +11,7 @@ from json import load as jsl, dump as jsd
 
 from MODS.rest_core.pack_core.RUN.PRE_LAUNCH import APP_INIT
 
-from MODS.MAIN_STRORAGE_BI.pack_core.SHOWCASE.constructor import \
+from MODS.storage_atlant_driver.pack_core.SHOWCASE.constructor import \
     smart_create_showcases, smart_delete_showcases, get_ycl_metadata
 
 parent_folder = Path(__file__).parent.parent

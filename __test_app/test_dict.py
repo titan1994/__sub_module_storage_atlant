@@ -10,7 +10,7 @@ from pathlib import Path
 from json import load as jsl, dump as jsd
 
 from MODS.rest_core.pack_core.RUN.PRE_LAUNCH import APP_INIT
-from MODS.MAIN_STRORAGE_BI.pack_core.NSI.tortoise_bridge import \
+from MODS.storage_atlant_driver.pack_core.NSI.tortoise_bridge import \
     bridge_smart_create_dictionaries, bridge_smart_delete_dictionaries
 
 parent_folder = Path(__file__).parent.parent
