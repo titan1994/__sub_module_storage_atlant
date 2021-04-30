@@ -6,3 +6,11 @@
 30-Apr-21 12:51:59 - Waiting for application startup.
 30-Apr-21 12:51:59 - Application startup complete.
 30-Apr-21 12:51:59 - Uvicorn running on http://0.0.0.0:5111 (Press CTRL+C to quit)
+30-Apr-21 13:19:43 - Started server process [26464]
+30-Apr-21 13:19:43 - Waiting for application startup.
+30-Apr-21 13:19:43 - Application startup complete.
+30-Apr-21 13:19:43 - Uvicorn running on http://0.0.0.0:5111 (Press CTRL+C to quit)
+30-Apr-21 13:45:08 - Started server process [33080]
+30-Apr-21 13:45:08 - Waiting for application startup.
+30-Apr-21 13:45:08 - Application startup complete.
+30-Apr-21 13:45:08 - Uvicorn running on http://0.0.0.0:5111 (Press CTRL+C to quit)

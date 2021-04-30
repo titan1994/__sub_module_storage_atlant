@@ -11,7 +11,7 @@ class ORM_nsi_basicclient_organizationsrf(models.Model):
 
     
     # ИНН
-    INN777 = fields.CharField(
+    INN888 = fields.CharField(
         description ='ИНН', max_length=100, pk=True
     )
     

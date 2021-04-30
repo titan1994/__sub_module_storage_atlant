@@ -45,7 +45,7 @@
                             "comment": "супер инфа",
                             "columns": [
                                 {
-                                    "system_name": "INN777",
+                                    "system_name": "INN888",
                                     "human_name": "ИНН",
                                     "data_type": "CharField",
                                     "is_primary_key": true,
@@ -64,7 +64,7 @@
                             ],
                             "old_columns": [
                                 {
-                                    "system_name": "INN777",
+                                    "system_name": "INN888",
                                     "human_name": "ИНН",
                                     "data_type": "CharField",
                                     "is_primary_key": true,
@@ -104,7 +104,15 @@
                             "create_or_update_queue": true,
                             "create_or_update_showcase": true,
                             "create_or_update_view": true,
-                            "msg": "OK"
+                            "msg": "OK",
+                            "queue_report_column_update": "success remove kafka queue",
+                            "target_report_column_update": {
+                                "Size": {
+                                    "status": true,
+                                    "action": "new_type",
+                                    "msg": "OK"
+                                }
+                            }
                         }
                     }
                 }
@@ -125,7 +133,8 @@
                                 },
                                 "Size": {
                                     "human_name": "Размер ставки-подставки",
-                                    "type": "Int32",
+                                    "type": "Int64",
+                                    "new_name": "MaxSize",
                                     "comment": "Размер ставки-подставки",
                                     "dma": "",
                                     "ttl": ""
