@@ -22,14 +22,15 @@ TEST_DEL_FILE = parent_folder / \
                 '__test_data' / 'client' / '__delete.json'
 
 
-async def test_processing_post_create():
+async def test_processing_post_create(POST_FILE):
     """
     Тестирование создания/обновления клиентов
     """
-    with open(TEST_POST_FILE, 'r', encoding='utf-8') as file:
+    with open(POST_FILE, 'r', encoding='utf-8') as file:
         input_data = jsl(fp=file)
 
     result = await smart_create_client(json_data=input_data)
+    print(result)
     with open('z_send_insert_showcase.json', 'w', encoding='utf-8') as fb:
         jsd(result, fb, ensure_ascii=False, indent=4)
 
