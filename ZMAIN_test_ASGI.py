@@ -18,10 +18,10 @@ if __name__ == '__main__':
 
         if platform in ('win32', 'win64'):
             cmd = f'uvicorn --host 0.0.0.0 --port {GeneralConfig.DEFAULT_PORT} ' + \
-                  f'--workers {GeneralConfig.DEFAULT_WORKER_COUNT} ZMAIN:app'
+                  f'--workers {GeneralConfig.DEFAULT_WORKER_COUNT} ZMAIN:app --reload'
 
         else:
-            cmd = f'gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:{GeneralConfig.DEFAULT_PORT}' + \
-                  f'-w {GeneralConfig.DEFAULT_WORKER_COUNT} ZMAIN:app'
+            cmd = f'gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:{GeneralConfig.DEFAULT_PORT} ' + \
+                  f'-w {GeneralConfig.DEFAULT_WORKER_COUNT} ZMAIN:app --reload'
 
-    system(cmd)
+        system(cmd)
