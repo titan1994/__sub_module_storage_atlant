@@ -16,7 +16,7 @@ from MODS.storage_atlant_driver.pack_core.SHOWCASE.constructor import \
 
 parent_folder = Path(__file__).parent.parent
 TEST_POST_FILE = parent_folder / \
-                 '__test_data' / 'showcase' / '__post_add_update.json'
+                 '__test_data' / 'showcase' / '__post_add_or_update.json'
 
 TEST_DEL_FILE = parent_folder / \
                 '__test_data' / 'showcase' / '__delete.json'
@@ -58,6 +58,6 @@ async def test_processing_delete():
 
 if __name__ == '__main__':
     ioloop = asyncio.get_event_loop()
-    # ioloop.run_until_complete(test_processing_post_create())
+    ioloop.run_until_complete(test_processing_post_create())
     # ioloop.run_until_complete(test_processing_delete())
     # ioloop.run_until_complete(test_get_metadata())
