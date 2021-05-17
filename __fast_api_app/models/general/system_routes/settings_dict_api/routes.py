@@ -22,11 +22,6 @@ async def settings_dict_create(body=Body(...)):
     """
 
     res = await bridge_smart_create_dictionaries(data_json=body)
-    from tortoise import Tortoise
-    
-    from MODS.rest_core.pack_core.aerich_proc import config as cfg_tortoise
-    await Tortoise.init(config=cfg_tortoise.get_tortoise_config())
-
     return res
 
 
