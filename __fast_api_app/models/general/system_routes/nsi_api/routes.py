@@ -9,6 +9,7 @@ from typing import Optional
 from MODS.standart_namespace.routes import standardize_response
 from .tools.create_model import create_some
 from .tools.get_model import get_some
+from .tools.delete_model import delete_some
 
 router = APIRouter(
     prefix="/orm",
@@ -91,3 +92,19 @@ async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: Optional[str]
         filter={"pk": pk}
     )
     return res[0]
+
+
+@router.post("/page/{client_key}/{dict_name}/filter/delete")
+@standardize_response
+async def orm_get_model_list_filter_delete_page(client_key: str, dict_name: str,
+                                         body=Body(...)):
+    """
+    Универсальное получение фильтрованного списка с пагинацией
+    """
+    res = await delete_some(
+        client_key=client_key,
+        dict_name=dict_name,
+
+        filter=body.get('filter', None),
+    )
+    return res

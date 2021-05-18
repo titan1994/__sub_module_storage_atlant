@@ -3,7 +3,6 @@
 """
 
 from fastapi.encoders import jsonable_encoder
-from fastapi import HTTPException
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
@@ -38,4 +37,3 @@ async def get_some(client_key, dict_name, **kwargs):
 
     res = jsonable_encoder(model_list)
     return res
-
