@@ -62,3 +62,9 @@
 17-May-21 12:12:30 - Waiting for application startup.
 17-May-21 12:12:30 - Application startup complete.
 17-May-21 12:12:30 - Uvicorn running on http://0.0.0.0:5111 (Press CTRL+C to quit)
+18-May-21 12:28:08 - Started server process [19256]
+18-May-21 12:28:08 - Waiting for application startup.
+18-May-21 12:28:08 - Application startup complete.
+18-May-21 12:28:08 - [Errno 10048] error while attempting to bind on address ('0.0.0.0', 5111): обычно разрешается только одно использование адреса сокета (протокол/сетевой адрес/порт)
+18-May-21 12:28:08 - Waiting for application shutdown.
+18-May-21 12:28:08 - Application shutdown complete.

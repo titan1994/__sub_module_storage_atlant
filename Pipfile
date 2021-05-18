@@ -56,6 +56,7 @@ httpx = "*"
 # Docker
 pyyaml = "*"
 aerich = "*"
+fastapi-pagination = "*"
 
 [dev-packages]
 
