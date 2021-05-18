@@ -24,12 +24,12 @@ async def get_some(client_key, dict_name, **kwargs):
         raise ORMProcessingError('Model not found!')
 
     pyd_model = pydantic_model_creator(class_model)
-    if kwargs['filter']: # Фильтрация
+    if 'filter' in kwargs and kwargs['filter']: # Фильтрация
         model_queryset = class_model.filter(**kwargs['filter'])
     else:
         model_queryset = class_model.all()
 
-    if kwargs['order_by']:  # Сортировка
+    if 'order_by' in kwargs and kwargs['order_by']:  # Сортировка
         model_queryset = model_queryset.order_by(*kwargs['order_by'])
 
     model_list = await pyd_model.from_queryset(model_queryset)

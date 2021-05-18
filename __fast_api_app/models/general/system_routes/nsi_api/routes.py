@@ -81,7 +81,7 @@ async def orm_get_model_list_filter_page(client_key: str, dict_name: str, params
 
 @router.get("/page/{client_key}/{dict_name}/{pk}")
 @standardize_response
-async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: Optional[str], params: Params = Depends()):
+async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: Optional[str]):
     """
     Получение объекта по уникальному идентификатору
     """
