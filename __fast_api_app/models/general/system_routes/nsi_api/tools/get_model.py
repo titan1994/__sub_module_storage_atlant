@@ -4,7 +4,8 @@
 
 from fastapi.encoders import jsonable_encoder
 from tortoise.contrib.pydantic import pydantic_model_creator
-from .get_class import get_orm_class
+
+from MODS.storage_atlant_driver.pack_core.main import get_orm_class
 
 
 class ORMProcessingError(Exception):

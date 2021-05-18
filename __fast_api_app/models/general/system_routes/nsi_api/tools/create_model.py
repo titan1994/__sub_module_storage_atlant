@@ -6,7 +6,7 @@ from json import loads as jsl
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import ValidationError
 
-from .get_class import get_orm_class
+from MODS.storage_atlant_driver.pack_core.main import get_orm_class
 
 
 class ORMCreateError(Exception):
