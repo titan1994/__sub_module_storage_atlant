@@ -3,6 +3,7 @@
 """
 
 from fastapi.encoders import jsonable_encoder
+from fastapi import HTTPException
 from tortoise.contrib.pydantic import pydantic_model_creator
 
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
@@ -23,9 +24,18 @@ async def get_some(client_key, dict_name, **kwargs):
         raise ORMProcessingError('Model not found!')
 
     pyd_model = pydantic_model_creator(class_model)
-    model_list = await pyd_model.from_queryset(class_model.all())  # Предполагаемое место вставки фильтрации
+    if kwargs['filter']: # Фильтрация
+        model_queryset = class_model.filter(**kwargs['filter'])
+    else:
+        model_queryset = class_model.all()
+
+    if kwargs['order_by']:  # Сортировка
+        model_queryset = model_queryset.order_by(*kwargs['order_by'])
+
+    model_list = await pyd_model.from_queryset(model_queryset)
     if not model_list:
-        raise ORMProcessingError('Model list is empty!')
+        raise ORMProcessingError('Model`s items not found')
 
     res = jsonable_encoder(model_list)
     return res
+
