@@ -15,7 +15,7 @@ from MODS.storage_atlant_driver.pack_core.NSI.tortoise_bridge import \
 
 parent_folder = Path(__file__).parent.parent
 TEST_POST_FILE = parent_folder / \
-                 '__test_data' / 'dictionary' / '__post_add_update.json'
+                 '__test_data' / 'dictionary' / '__post_add_or_update..json'
 
 TEST_DEL_FILE = parent_folder / \
                 '__test_data' / 'dictionary' / '__delete.json'

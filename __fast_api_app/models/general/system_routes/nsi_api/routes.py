@@ -2,11 +2,11 @@
 Универсальное API для работы с моделями
 """
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends
 from fastapi_pagination import Params, paginate
-from typing import Optional
 
 from MODS.standart_namespace.routes import standardize_response
+
 from .tools.create_model import create_some
 from .tools.get_model import get_some
 from .tools.delete_model import delete_some
@@ -16,6 +16,37 @@ router = APIRouter(
     tags=["ORM-Dictionaries"],
     responses={404: {"description": "Not found"}},
 )
+
+"""
+Примеры
+"""
+
+EXAMPLE_POST_DICT_DATA = {
+    "INN": "6829004230",
+    "full_name": "Иванов Иван Иванович",
+}
+
+EXAMPLE_FILTER_ORDER_BODY = {
+    "filter": {
+        "federal_district": "Сибирский ФО",
+        "code": "49",
+    },
+    "order_by": [
+        "federal_district",
+        "-OKTMO",
+    ],
+}
+
+EXAMPLE_DELETE_FILTER_BODY = {
+    "filter": {
+        "federal_district": "Сибирский ФО",
+        "code": "49",
+    },
+}
+
+"""
+Получение данных
+"""
 
 
 @router.get("/{client_key}/{dict_name}")
@@ -32,25 +63,46 @@ async def orm_get_model_list(client_key: str, dict_name: str):
     return res
 
 
-@router.post("/{client_key}/{dict_name}")
+@router.post("{client_key}/{dict_name}/filter")
 @standardize_response
-async def orm_post_model_list(client_key: str, dict_name: str, body=Body(...)):
+async def orm_get_model_list_filter(
+        client_key: str,
+        dict_name: str,
+        body=Body(..., example=EXAMPLE_FILTER_ORDER_BODY)
+):
     """
-    Универсальная вставка модели
+    Универсальное получение фильтрованного списка без пагинации
     """
-
-    res = await create_some(
+    res = await get_some(
         client_key=client_key,
         dict_name=dict_name,
-        body=body
+        filter=body.get('filter', None),
+        order_by=body.get('order_by', None)
     )
-
     return res
+
+
+@router.get("{client_key}/{dict_name}/{pk}")
+@standardize_response
+async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: str):
+    """
+    Получение объекта по уникальному идентификатору
+    """
+    res = await get_some(
+        client_key=client_key,
+        dict_name=dict_name,
+        filter={"pk": pk}
+    )
+    return res[0]
 
 
 @router.get("/page/{client_key}/{dict_name}")
 @standardize_response
-async def orm_get_model_list_page(client_key: str, dict_name: str, params: Params = Depends()):
+async def orm_get_model_list_page(
+        client_key: str,
+        dict_name: str,
+        params: Params = Depends()
+):
     """
     Универсальное получение списка с пагинацией
     """
@@ -65,8 +117,12 @@ async def orm_get_model_list_page(client_key: str, dict_name: str, params: Param
 
 @router.post("/page/{client_key}/{dict_name}/filter")
 @standardize_response
-async def orm_get_model_list_filter_page(client_key: str, dict_name: str, params: Params = Depends(),
-                                         body=Body(...)):
+async def orm_get_model_list_filter_page(
+        client_key: str,
+        dict_name: str,
+        params: Params = Depends(),
+        body=Body(..., example=EXAMPLE_FILTER_ORDER_BODY)
+):
     """
     Универсальное получение фильтрованного списка с пагинацией
     """
@@ -80,31 +136,64 @@ async def orm_get_model_list_filter_page(client_key: str, dict_name: str, params
     return page
 
 
-@router.get("/page/{client_key}/{dict_name}/{pk}")
+"""
+Добавление данных
+"""
+
+
+@router.post("/{client_key}/{dict_name}")
 @standardize_response
-async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: Optional[str]):
+async def orm_post_model_list(
+        client_key: str,
+        dict_name: str,
+        body=Body(..., example=EXAMPLE_POST_DICT_DATA)
+):
     """
-    Получение объекта по уникальному идентификатору
+    Универсальная вставка модели
     """
-    res = await get_some(
+
+    res = await create_some(
         client_key=client_key,
         dict_name=dict_name,
-        filter={"pk": pk}
+        body=body
     )
-    return res[0]
+
+    return res
 
 
-@router.post("/page/{client_key}/{dict_name}/filter/delete")
+"""
+Удаление данных
+"""
+
+
+@router.delete("{client_key}/{dict_name}/filter")
 @standardize_response
-async def orm_get_model_list_filter_delete_page(client_key: str, dict_name: str,
-                                         body=Body(...)):
+async def orm_delete_model_list_filter(
+        client_key: str,
+        dict_name: str,
+        body=Body(..., example=EXAMPLE_DELETE_FILTER_BODY)
+):
     """
-    Универсальное получение фильтрованного списка с пагинацией
+    Универсальное удаление фильтрованного списка
+    """
+
+    res = await delete_some(
+        client_key=client_key,
+        dict_name=dict_name,
+        filter=body.get('filter', None),
+    )
+    return res
+
+
+@router.delete("{client_key}/{dict_name}/{pk}")
+@standardize_response
+async def orm_delete_model_list_by_pk(client_key: str, dict_name: str, pk: str):
+    """
+    Удаление объекта по уникальному идентификатору
     """
     res = await delete_some(
         client_key=client_key,
         dict_name=dict_name,
-
-        filter=body.get('filter', None),
+        filter={"pk": pk}
     )
     return res
