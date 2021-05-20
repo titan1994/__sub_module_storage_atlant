@@ -1,0 +1,3 @@
+from .models import ORM_nsi_farmerpassport_source_forms
+from tortoise.contrib.pydantic import pydantic_model_creator
+PYD_nsi_farmerpassport_source_forms = pydantic_model_creator(ORM_nsi_farmerpassport_source_forms)

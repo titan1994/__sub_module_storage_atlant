@@ -3,7 +3,7 @@ version: '3'
 
 #Внешние волюмы
 volumes:
-    psql___sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5:
+    psql_sub_module_storage_atlant:
         external: true
 
 
@@ -20,15 +20,15 @@ services:
 
 
   # Постгрес (официальная сборка)
-  __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_postgres:
+  sub_module_storage_atlant_postgres:
     restart: always
     image: postgres:13
-    container_name: __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_postgres
+    container_name: sub_module_storage_atlant_postgres
     command: postgres -c 'max_connections=5000'
     ports:
       - 5432:5432
     volumes:
-      - psql___sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5:/var/lib/postgresql/data
+      - psql_sub_module_storage_atlant:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: __test_app_core
       POSTGRES_USER: __test_app_core
@@ -40,9 +40,9 @@ services:
 
 
   # Кликхаус (официальная сборка)
-  __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_clickhouse:
+  sub_module_storage_atlant_clickhouse:
     image: yandex/clickhouse-server
-    container_name: __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_clickhouse
+    container_name: sub_module_storage_atlant_clickhouse
     ports:
       - 8123:8123
       - 9000:9000
@@ -217,14 +217,14 @@ services:
       ITS_DOCKER: "True"
 
     depends_on:
-     - __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_postgres
+     - sub_module_storage_atlant_postgres
 
 
   # Ядро
-  __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5:
+  sub_module_storage_atlant:
     image: atom1994/storage_atlant
     restart: on-failure
-    container_name: __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5
+    container_name: sub_module_storage_atlant
 
     
     ports:
@@ -248,10 +248,10 @@ services:
 
     depends_on:
 
-     - __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_postgres
+     - sub_module_storage_atlant_postgres
 
 
-     - __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5_clickhouse
+     - sub_module_storage_atlant_clickhouse
 
 
      - kafdrop
