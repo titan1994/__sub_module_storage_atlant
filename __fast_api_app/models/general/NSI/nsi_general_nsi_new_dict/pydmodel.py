@@ -1,3 +1,0 @@
-from .models import ORM_nsi_general_nsi_new_dict
-from tortoise.contrib.pydantic import pydantic_model_creator
-PYD_nsi_general_nsi_new_dict = pydantic_model_creator(ORM_nsi_general_nsi_new_dict)

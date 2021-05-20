@@ -222,7 +222,7 @@ services:
 
   # Ядро
   __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5:
-    build: ./
+    image: atom1994/storage_atlant
     restart: on-failure
     container_name: __sub_module_storage_atlant_eee0c47c-7266-4c4d-9dd0-b05c68c8e7a5
 

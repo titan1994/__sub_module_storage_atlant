@@ -23,7 +23,7 @@ GENERAL_DOCKER_COMPOSE = GeneralConfig.PROJECT_GENERAL_FOLDER / 'docker-compose.
 GENERAL_DOCKERFILE = GeneralConfig.PROJECT_GENERAL_FOLDER / 'Dockerfile'
 GENERAL_ENV_DEV = GeneralConfig.PROJECT_GENERAL_FOLDER / '.env.development'
 GENERAL_NGINX_CONF = GeneralConfig.PROJECT_GENERAL_FOLDER / '__docker' / 'volumes' / 'nginx' / 'nginx.conf'
-GENERAL_PATH_REQUIREMENTS = 'requirements'
+GENERAL_PATH_REQUIREMENTS = 'pipenv lock -r > requirements.txt'
 
 # JINJA2 pattern
 GENERAL_PATH_JINJA_DOCKERFILE = GeneralConfig.PROJECT_GENERAL_FOLDER / '__docker' / 'pattern' / 'jinja_docker_file'

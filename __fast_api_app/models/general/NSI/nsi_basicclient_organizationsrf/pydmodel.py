@@ -1,3 +1,0 @@
-from .models import ORM_nsi_basicclient_organizationsrf
-from tortoise.contrib.pydantic import pydantic_model_creator
-PYD_nsi_basicclient_organizationsrf = pydantic_model_creator(ORM_nsi_basicclient_organizationsrf)
