@@ -20,13 +20,18 @@ router = APIRouter(
 Примеры 
 """
 
-DEFAULT_PATH_EXAMPLE_POST_DATA = PROJECT_GENERAL_FOLDER / '__test_data' / 'dictionary' / '__post_add_or_update.json'
-with open(DEFAULT_PATH_EXAMPLE_POST_DATA, 'r', encoding='utf8') as fobj:
-    EXAMPLE_POST_CLIENT_DATA = jsf(fobj)
+try:
+    DEFAULT_PATH_EXAMPLE_POST_DATA = PROJECT_GENERAL_FOLDER / '__test_data' / 'dictionary' / '__post_add_or_update.json'
+    with open(DEFAULT_PATH_EXAMPLE_POST_DATA, 'r', encoding='utf8') as fobj:
+        EXAMPLE_POST_CLIENT_DATA = jsf(fobj)
 
-DEFAULT_PATH_EXAMPLE_DELETE = PROJECT_GENERAL_FOLDER / '__test_data' / 'dictionary' / '__delete.json'
-with open(DEFAULT_PATH_EXAMPLE_DELETE, 'r', encoding='utf8') as fobj:
-    EXAMPLE_DELETE_CLIENT_DATA = jsf(fobj)
+    DEFAULT_PATH_EXAMPLE_DELETE = PROJECT_GENERAL_FOLDER / '__test_data' / 'dictionary' / '__delete.json'
+    with open(DEFAULT_PATH_EXAMPLE_DELETE, 'r', encoding='utf8') as fobj:
+        EXAMPLE_DELETE_CLIENT_DATA = jsf(fobj)
+
+except FileNotFoundError:
+    EXAMPLE_POST_CLIENT_DATA = None
+    EXAMPLE_DELETE_CLIENT_DATA = None
 
 """
 Создание

@@ -239,6 +239,8 @@ services:
 
      - ./data_launch_system:/__sub_module_storage_atlant/data_launch_system/
 
+     - ./__test_data:/__sub_module_storage_atlant/__test_data/
+
 
     env_file:
       - .env.development

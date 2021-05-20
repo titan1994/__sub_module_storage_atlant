@@ -17,6 +17,11 @@ RUN set -ex && mkdir -p /__sub_module_storage_atlant/__migrations/
 WORKDIR /__sub_module_storage_atlant/__migrations/
 COPY ./__migrations .
 
+# Копировать. Тестовые данные
+RUN set -ex && mkdir -p /__sub_module_storage_atlant/__test_data/
+WORKDIR /__sub_module_storage_atlant/__test_data/
+COPY ./__test_data .
+
 # Копировать. Основная обвязка реста
 RUN set -ex && mkdir -p /__sub_module_storage_atlant/__fast_api_app/
 WORKDIR /__sub_module_storage_atlant/__fast_api_app/
@@ -35,7 +40,7 @@ COPY ./MODS .
 
 
 # Открываем волюмы
-VOLUME /__sub_module_storage_atlant/__migrations/ /__sub_module_storage_atlant/__fast_api_app/ /__sub_module_storage_atlant/data_launch_system/
+VOLUME /__sub_module_storage_atlant/__migrations/ /__sub_module_storage_atlant/__fast_api_app/ /__sub_module_storage_atlant/data_launch_system/ /__sub_module_storage_atlant/__test_data/
 
 # Открываем порт
 EXPOSE 5111
