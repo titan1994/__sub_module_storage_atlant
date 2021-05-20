@@ -7,12 +7,18 @@ from MODS.storage_atlant_driver.pack_core.psql_jsonb.connector import \
     DEFAULT_client_key_NAME
 
 
+class ClientProcessingError(Exception):
+    pass
+
+
 async def get_meta_clients(**kwargs):
     """
     Все метаданные клиентов приложения
     """
 
     list_objs = await get_all_clients()
+    if not list_objs:
+        raise ClientProcessingError('Clients is empty!')
 
     summary_result = {}
     for obj_meta in list_objs:

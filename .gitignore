@@ -79,3 +79,4 @@ __docker/volumes/kafka/zoo/log/*
 !data_launch_system/dict_load_xlsx/a_loads/.gitkeep
 !data_launch_system/first_launch/init_file_a_loads/.gitkeep
 !data_launch_system/first_launch/init_file_z_ok/.gitkeep
+/__fast_api_app/models/general/NSI/

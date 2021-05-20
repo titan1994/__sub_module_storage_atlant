@@ -226,19 +226,19 @@ services:
     restart: on-failure
     container_name: sub_module_storage_atlant
 
-    
+
     ports:
       - 5111:5111
-    
+
 
     volumes:
-    
+
      - ./__migrations:/__sub_module_storage_atlant/__migrations/
-    
+
      - ./__fast_api_app:/__sub_module_storage_atlant/__fast_api_app/
-    
+
      - ./data_launch_system:/__sub_module_storage_atlant/data_launch_system/
-    
+
 
     env_file:
       - .env.development
@@ -257,8 +257,5 @@ services:
      - kafdrop
      - jsonb_service
 
-
-
-    # внешняя сеть
 
 

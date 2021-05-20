@@ -1,3 +1,0 @@
-from .models import ORM_nsi_farmerpassport_subjects_rf
-from tortoise.contrib.pydantic import pydantic_model_creator
-PYD_nsi_farmerpassport_subjects_rf = pydantic_model_creator(ORM_nsi_farmerpassport_subjects_rf)
