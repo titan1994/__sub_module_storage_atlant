@@ -17,6 +17,7 @@ def first_init():
     # Хранилище витрин данных на кликхаусе
     if GeneralConfig.ITS_DOCKER:
         GeneralConfig.CLICKHOUSE_SHOWCASE_URL = getenv('CLICKHOUSE_SHOWCASE_URL_DOCKER')
+        # GeneralConfig.YCL_DRIVER_IS_SYNC = True
     else:
         GeneralConfig.CLICKHOUSE_SHOWCASE_URL = getenv('CLICKHOUSE_SHOWCASE_URL_NO_DOCKER')
 

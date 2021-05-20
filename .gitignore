@@ -31,9 +31,21 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
+# MIGRATIONS
+APP_RUN/aerich.ini
+APP_RUN/alembic.ini
 
+__migrations/aerich/*
+__migrations/migration.log
+!__migrations/aerich/.gitkeep
 
-/MODS/
+__jsonb_docker_migrations/aerich/*
+__jsonb_docker_migrations/migration.log
+!__jsonb_docker_migrations/aerich/.gitkeep
+
+__migrations/alembic/*
+!__migrations/alembic/.gitkeep
+
 # DOCKER VOLUMES. CL
 
 __docker/volumes/clickhouse/cl_db/*
@@ -55,3 +67,15 @@ __docker/volumes/kafka/zoo/data/*
 
 __docker/volumes/kafka/zoo/log/*
 !__docker/volumes/kafka/zoo/log/.gitkeep
+/MODS/
+
+
+/data_launch_system/dict_load_xlsx/z_complete/*
+/data_launch_system/dict_load_xlsx/a_loads/*
+/data_launch_system/first_launch/init_file_a_loads/*
+/data_launch_system/first_launch/init_file_z_ok/*
+
+!data_launch_system/dict_load_xlsx/z_complete/.gitkeep
+!data_launch_system/dict_load_xlsx/a_loads/.gitkeep
+!data_launch_system/first_launch/init_file_a_loads/.gitkeep
+!data_launch_system/first_launch/init_file_z_ok/.gitkeep
