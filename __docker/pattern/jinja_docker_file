@@ -4,7 +4,7 @@ FROM python:3.8
 RUN set -ex && mkdir -p /{{core_folder}}/
 WORKDIR /{{core_folder}}/
 COPY ./{{requirements}}.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r {{requirements}}.txt
 RUN pip install tortoise-orm[accel]
 
 # Копирование файлов запуска

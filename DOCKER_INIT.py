@@ -23,7 +23,7 @@ GENERAL_DOCKER_COMPOSE = GeneralConfig.PROJECT_GENERAL_FOLDER / 'docker-compose.
 GENERAL_DOCKERFILE = GeneralConfig.PROJECT_GENERAL_FOLDER / 'Dockerfile'
 GENERAL_ENV_DEV = GeneralConfig.PROJECT_GENERAL_FOLDER / '.env.development'
 GENERAL_NGINX_CONF = GeneralConfig.PROJECT_GENERAL_FOLDER / '__docker' / 'volumes' / 'nginx' / 'nginx.conf'
-GENERAL_PATH_REQUIREMENTS = 'pipenv lock -r > requirements.txt'
+GENERAL_PATH_REQUIREMENTS = 'requirements'
 
 # JINJA2 pattern
 GENERAL_PATH_JINJA_DOCKERFILE = GeneralConfig.PROJECT_GENERAL_FOLDER / '__docker' / 'pattern' / 'jinja_docker_file'
@@ -259,20 +259,20 @@ if __name__ == '__main__':
     # requirements.txt
     python_generate_requirements()
 
-    if AUTO_GENERATE_DOCKER:
-        # docker_file
-        generate_docker_file()
-
-        # docker_compose
-        generate_docker_compose()
-
-        # env
-        generate_dev_env()
-
-    # генератор внешних волюмов по композу
-    list_ext_volumes = docker_compose_get_all_external_volumes(GENERAL_DOCKER_COMPOSE)
-    for volume in list_ext_volumes:
-        docker_generate_volume(volume)
+    # if AUTO_GENERATE_DOCKER:
+    #     # docker_file
+    #     generate_docker_file()
+    #
+    #     # docker_compose
+    #     generate_docker_compose()
+    #
+    #     # env
+    #     generate_dev_env()
+    #
+    # # генератор внешних волюмов по композу
+    # list_ext_volumes = docker_compose_get_all_external_volumes(GENERAL_DOCKER_COMPOSE)
+    # for volume in list_ext_volumes:
+    #     docker_generate_volume(volume)
 
     # генератор внешних подсетей по композу
     # list_ext_networks = docker_compose_get_all_external_networks(GENERAL_DOCKER_COMPOSE)

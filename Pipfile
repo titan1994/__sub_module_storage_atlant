@@ -57,6 +57,13 @@ httpx = "*"
 pyyaml = "*"
 aerich = "*"
 fastapi-pagination = "*"
+python-multipart = "*"
+python-logstash-async = "*"
+cryptography = "==3.3.2"
+passlib = {extras = ["bcrypt"], version = "*"}
+python-jose = "*"
+ijson = "*"
+aiofile = "*"
 
 [dev-packages]
 
