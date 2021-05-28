@@ -141,7 +141,7 @@ async def orm_get_model_list_filter_page(
 """
 
 
-@router.post("insert_data/{client_key}/{dict_name}")
+@router.post("/insert_data/{client_key}/{dict_name}")
 @standardize_response
 async def orm_post_model_list(
         client_key: str,
