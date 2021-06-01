@@ -1,8 +1,5 @@
 from MODS.storage_atlant_driver.pack_core.psql_jsonb.connector import get_client
-from MODS.storage_atlant_driver.pack_core.main import \
-    DEFAULT_META_NAME_SHOWCASE, \
-    gen_showcase_table_name_showcase
-
+from MODS.storage_atlant_driver.pack_core.main import DEFAULT_META_NAME_SHOWCASE
 
 
 async def get_showcase_data(client_key, showcase_name):

@@ -3,6 +3,36 @@ from MODS.DRIVERS.data_base.async_click_house.ycl import select_base, select_uni
 from MODS.storage_atlant_driver.pack_core.main import ycl_get_connection_settings
 from .settings import get_showcase_data
 
+
+async def showcase_select_base(client_key, showcase_name, data):
+    """
+    Функция предобработки данных и вызова select
+    Получаем из хранилища метаданные таблицы (название)
+    создаём соединение с кликхаусом и передаём его и данные на генерацию sql
+    """
+    meta_data = await get_showcase_data(client_key, showcase_name)
+    data['table'] = meta_data['target_table']['table_name']
+    conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
+    res = await select_base(conn, data)
+    return res
+
+
+async def showcase_select_union(client_key, data):
+    """
+       Функция предобработки данных и вызова select union
+       Получаем из хранилища метаданные таблиц (название)
+       В каждом селекте должно быть showcase - имя витрины
+       создаём соединение с кликхаусом и передаём его и данные на генерацию sql
+    """
+    for select in data['selects']:
+        meta_data = await get_showcase_data(client_key, select['showcase'])
+        select['table'] = meta_data['target_table']['table_name']
+    conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
+    res = await select_union(conn, data)
+    return res
+
+
+# Пример данных для селекта
 EXAMPLE_SELECT_BASE = {
     "fields": [
         {
@@ -35,10 +65,11 @@ EXAMPLE_SELECT_BASE = {
     ]
 }
 
+# Пример данных для селектов с объединением
 EXAMPLE_SELECT_UNION = {
     "selects": [
         {
-            "showcase":"Passport KFH",
+            "showcase": "Passport KFH",
             "fields": [
                 {
                     "name": "INN",
@@ -49,7 +80,7 @@ EXAMPLE_SELECT_UNION = {
             "union": "ALL"
         },
         {
-            "showcase":"Passport KFH",
+            "showcase": "Passport KFH",
             "fields": [
                 {
                     "name": "INN",
@@ -61,20 +92,3 @@ EXAMPLE_SELECT_UNION = {
         }
     ]
 }
-
-
-async def showcase_select_base(client_key, showcase_name, data):
-    meta_data = await get_showcase_data(client_key, showcase_name)
-    data['table'] = meta_data['target_table']['table_name']
-    conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
-    res = await select_base(conn, data)
-    return res
-
-
-async def showcase_select_union(client_key, data):
-    for select in data['selects']:
-        meta_data = await get_showcase_data(client_key, select['showcase'])
-        select['table'] = meta_data['target_table']['table_name']
-    conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
-    res = await select_union(conn, data)
-    return res

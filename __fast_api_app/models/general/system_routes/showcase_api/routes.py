@@ -3,10 +3,9 @@ from fastapi_pagination import Params, paginate
 from MODS.standart_namespace.routes import standardize_response
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
 
-
 router = APIRouter(
-    prefix="/showcase",
-    tags=["Showcases"],
+    prefix="/showcases/clients_data",
+    tags=["CLIENTS-API"],
     responses={404: {"description": "Not found"}},
 )
 
@@ -21,7 +20,7 @@ async def select_base_route(client_key: str, showcase_name: str, body=Body(..., 
     return result
 
 
-@router.post("/select-union/{client_key}/{showcase_name}/")
+@router.post("/select-union/{client_key}/")
 @standardize_response
 async def select_union_route(client_key: str, body=Body(..., example=EXAMPLE_SELECT_UNION)):
     """
