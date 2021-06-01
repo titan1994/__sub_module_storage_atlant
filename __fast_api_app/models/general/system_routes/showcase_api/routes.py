@@ -3,6 +3,7 @@ from fastapi_pagination import Params, paginate
 from MODS.standart_namespace.routes import standardize_response
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
 
+
 router = APIRouter(
     prefix="/showcase",
     tags=["Showcases"],
@@ -10,21 +11,21 @@ router = APIRouter(
 )
 
 
-@router.post("/select-base")
+@router.post("/select-base/{client_key}/{showcase_name}/")
 @standardize_response
-async def select_base_route(body=Body(..., example=EXAMPLE_SELECT_BASE)):
+async def select_base_route(client_key: str, showcase_name: str, body=Body(..., example=EXAMPLE_SELECT_BASE)):
     """
     Универсальный маршрут для отправки select запроса к витрине
     """
-    result = await showcase_select_base(body)
+    result = await showcase_select_base(client_key, showcase_name, body)
     return result
 
 
-@router.post("/select-union")
+@router.post("/select-union/{client_key}/{showcase_name}/")
 @standardize_response
-async def select_union_route(body=Body(..., example=EXAMPLE_SELECT_UNION)):
+async def select_union_route(client_key: str, body=Body(..., example=EXAMPLE_SELECT_UNION)):
     """
     Универсальный маршрут для отправки объединённых select запросов к витрине
     """
-    result = await showcase_select_union(body)
+    result = await showcase_select_union(client_key, body)
     return result

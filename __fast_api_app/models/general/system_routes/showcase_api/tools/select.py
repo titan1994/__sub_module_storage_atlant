@@ -1,12 +1,15 @@
 from GENERAL_CONFIG import GeneralConfig
 from MODS.DRIVERS.data_base.async_click_house.ycl import select_base, select_union
 from MODS.storage_atlant_driver.pack_core.main import ycl_get_connection_settings
+from .settings import get_showcase_data
 
 EXAMPLE_SELECT_BASE = {
-    "table": "__cl_smpb_showcase_data_farmerpassport_meansofpassport",
     "fields": [
-        "count(subject)",
-        "period"
+        {
+            "name": "pk",
+            "func": "count",
+            "alias": "biba"
+        }
     ],
     "distinct": True,
     "filters": [
@@ -35,18 +38,24 @@ EXAMPLE_SELECT_BASE = {
 EXAMPLE_SELECT_UNION = {
     "selects": [
         {
-            "table": "__cl_smpb_nsi_farmerpassport_source_forms",
+            "showcase":"Passport KFH",
             "fields": [
-                "name",
-                "code"
+                {
+                    "name": "INN",
+                    "func": "count",
+                    "alias": "alternative_name"
+                }
             ],
             "union": "ALL"
         },
         {
-            "table": "__cl_smpb_nsi_farmerpassport_source_forms",
+            "showcase":"Passport KFH",
             "fields": [
-                "name",
-                "code"
+                {
+                    "name": "INN",
+                    "func": "count",
+                    "alias": "alternative_name"
+                }
             ],
             "union": "ALL"
         }
@@ -54,13 +63,18 @@ EXAMPLE_SELECT_UNION = {
 }
 
 
-async def showcase_select_base(data):
+async def showcase_select_base(client_key, showcase_name, data):
+    meta_data = await get_showcase_data(client_key, showcase_name)
+    data['table'] = meta_data['target_table']['table_name']
     conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
     res = await select_base(conn, data)
     return res
 
 
-async def showcase_select_union(data):
+async def showcase_select_union(client_key, data):
+    for select in data['selects']:
+        meta_data = await get_showcase_data(client_key, select['showcase'])
+        select['table'] = meta_data['target_table']['table_name']
     conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
     res = await select_union(conn, data)
     return res
