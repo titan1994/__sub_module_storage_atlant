@@ -4,7 +4,7 @@
 
 from json import load as jsf
 from fastapi import APIRouter, Body
-
+from MODS.rest_core.pack_core.system_models.system_models import tortoise_state
 from MODS.scripts.python.easy_scripts import PROJECT_GENERAL_FOLDER
 from MODS.standart_namespace.routes import standardize_response
 from MODS.storage_atlant_driver.pack_core.NSI.tortoise_bridge import \
@@ -46,6 +46,7 @@ async def settings_dict_create(body=Body(..., example=EXAMPLE_POST_CLIENT_DATA))
     """
 
     res = await bridge_smart_create_dictionaries(data_json=body)
+    await tortoise_state.all().update(state=False)
     return res
 
 
@@ -62,4 +63,5 @@ async def settings_dict_delete(body=Body(..., example=EXAMPLE_DELETE_CLIENT_DATA
     """
 
     res = await bridge_smart_delete_dictionaries(data_json=body)
+    await tortoise_state.all().update(state=False)
     return res

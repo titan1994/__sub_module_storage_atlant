@@ -39,7 +39,6 @@ except FileNotFoundError:
 Получение клиентов
 """
 
-
 @router.get("/client")
 @standardize_response
 async def settings_client_get_all(client_key: Optional[str] = None):
