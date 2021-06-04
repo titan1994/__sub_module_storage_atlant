@@ -44,9 +44,7 @@ async def settings_dict_create(body=Body(..., example=EXAMPLE_POST_CLIENT_DATA))
     """
     Создание НСИ
     """
-
     res = await bridge_smart_create_dictionaries(data_json=body)
-    await tortoise_state.all().update(state=False)
     return res
 
 
@@ -61,7 +59,5 @@ async def settings_dict_delete(body=Body(..., example=EXAMPLE_DELETE_CLIENT_DATA
     """
     Удаление НСИ
     """
-
     res = await bridge_smart_delete_dictionaries(data_json=body)
-    await tortoise_state.all().update(state=False)
     return res
