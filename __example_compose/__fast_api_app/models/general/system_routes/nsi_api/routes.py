@@ -10,11 +10,14 @@ from MODS.standart_namespace.routes import standardize_response
 from .tools.create_model import create_some
 from .tools.get_model import get_some
 from .tools.delete_model import delete_some
+from ...system_routes.auth.tools import verify_token
+
 
 router = APIRouter(
     prefix="/orm",
     tags=["ORM-Dictionaries"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(verify_token)]
 )
 
 """
