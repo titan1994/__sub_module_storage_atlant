@@ -8,9 +8,7 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
 from MODS.rest_core.pack_core.aerich_proc import config as cfg_tortoise
 from MODS.rest_core.pack_core.system_models.system_models import tortoise_state
-from socket import gethostname
-from os import getpid
-from tortoise import Tortoise
+
 
 class ORMProcessingError(Exception):
     pass
@@ -21,11 +19,9 @@ async def get_some(client_key, dict_name, **kwargs):
     Получить список моделей, одну модель с фильтрацией.
     Пока что есть только получение списка без фильтра
     """
-    obj_state = await tortoise_state.get(server=gethostname(), pid=getpid())
-    if not obj_state.state:
-        await Tortoise.init(config=cfg_tortoise.get_tortoise_config())
-        obj_state.state=True
-        await obj_state.save()
+    state = await tortoise_state.state_check()
+    if not state:
+        await tortoise_state.state_activate()
     class_model = get_orm_class(client_key=client_key, dict_name=dict_name)
     if not class_model:
         raise ORMProcessingError('Model not found!')

@@ -46,9 +46,9 @@ async def run_create():
     print('PROJECT DATA INIT RUN')
 
     # Запускаем тортоис
-    from MODS.rest_core.pack_core.aerich_proc.config import TORTOISE_ORM
+    from MODS.rest_core.pack_core.aerich_proc.config import get_tortoise_config
     from tortoise import Tortoise
-    await Tortoise.init(config=TORTOISE_ORM)
+    await Tortoise.init(config=get_tortoise_config())
 
     # Выполняем процедуру генерации клиентов из файловой системы
     await generate_default_client()

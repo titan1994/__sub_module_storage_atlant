@@ -5,11 +5,7 @@
 from json import loads as jsl
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import ValidationError
-from MODS.rest_core.pack_core.aerich_proc import config as cfg_tortoise
 from MODS.rest_core.pack_core.system_models.system_models import tortoise_state
-from socket import gethostname
-from os import getpid
-from tortoise import Tortoise
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
 
 
@@ -25,11 +21,9 @@ async def create_some(client_key, dict_name, body):
     """
     Универсальная вставка модели
     """
-    obj_state = await tortoise_state.get(server=gethostname(), pid=getpid())
-    if not obj_state.state:
-        await Tortoise.init(config=cfg_tortoise.get_tortoise_config())
-        obj_state.state=True
-        await obj_state.save()
+    state = await tortoise_state.state_check()
+    if not state:
+        await tortoise_state.state_activate()
     class_model = get_orm_class(client_key=client_key, dict_name=dict_name)
     if not class_model:
         raise ORMCreateError('Model not found!')
