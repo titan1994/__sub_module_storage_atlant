@@ -4,11 +4,12 @@
 from json import load as jsf
 from typing import Optional
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 from MODS.scripts.python.easy_scripts import PROJECT_GENERAL_FOLDER
 from MODS.standart_namespace.routes import standardize_response
 from MODS.storage_atlant_driver.pack_core.HEART.client_api import \
     smart_create_client, smart_delete_client
+from ...system_routes.auth.tools import verify_token
 
 from .tools.get_list import get_meta_clients
 
@@ -16,6 +17,7 @@ router = APIRouter(
     prefix="/settings",
     tags=["SETTINGS. Client"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(verify_token)]
 )
 
 """
@@ -38,6 +40,7 @@ except FileNotFoundError:
 """
 Получение клиентов
 """
+
 
 @router.get("/client")
 @standardize_response

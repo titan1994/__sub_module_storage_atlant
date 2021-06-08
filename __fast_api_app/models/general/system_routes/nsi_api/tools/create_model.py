@@ -5,7 +5,7 @@
 from json import loads as jsl
 from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import ValidationError
-from MODS.rest_core.pack_core.system_models.system_models import tortoise_state
+
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
 
 
@@ -21,9 +21,6 @@ async def create_some(client_key, dict_name, body):
     """
     Универсальная вставка модели
     """
-    state = await tortoise_state.state_check()
-    if not state:
-        await tortoise_state.state_activate()
     class_model = get_orm_class(client_key=client_key, dict_name=dict_name)
     if not class_model:
         raise ORMCreateError('Model not found!')
@@ -90,4 +87,5 @@ async def model_create(ClassOrm, ClassPyd, data_model, soft_insert):
     back_proc = await ClassPyd.from_tortoise_orm(orm_obj)
     general_response['data'] = back_proc.dict()
     general_response['status'] = True
+
     return general_response

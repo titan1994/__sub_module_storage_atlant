@@ -3,18 +3,20 @@
 """
 
 from json import load as jsf
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Depends
 
 from MODS.scripts.python.easy_scripts import PROJECT_GENERAL_FOLDER
 from MODS.standart_namespace.routes import standardize_response
 
 from MODS.storage_atlant_driver.pack_core.SHOWCASE.constructor import \
     smart_create_showcases, smart_delete_showcases
+from ...system_routes.auth.tools import verify_token
 
 router = APIRouter(
     prefix="/settings",
     tags=["SETTINGS. Showcase"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(verify_token)]
 )
 
 """
