@@ -27,7 +27,7 @@ DEFAULT_PROC_CONFIGURE = {
 
 router = APIRouter(
     prefix="/showcases/clients_data",
-    tags=["CLIENTS-API"],
+    tags=["INDIVIDUAL-API"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(verify_token)]
 )

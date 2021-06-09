@@ -98,3 +98,9 @@ types_mapping = {
     'DateTime': str,
     'UUID': str,
 }
+
+INSERT_EXAMPLE = {
+    "INN":"112233",
+    "Size":1,
+    "MaxPart":1000
+}
