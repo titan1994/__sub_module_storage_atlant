@@ -29,7 +29,7 @@ async def showcase_insert_universal(client, showcase, data):
     columns = columns_to_pd_attr(metadata['target_table']['columns'], metadata['target_table']['order_by'])
     validators = validators_create(metadata['target_table']['columns'])
     PD_class = create_model('PD_{0}_{1}'.format(client, showcase), **columns, __validators__=validators)
-    if data is not list:
+    if not isinstance([], list):
         data = [data]
     with KafkaProducerConfluent(
             use_tx=CONST_USE_TX_CL_DATA_INPUT,
@@ -38,7 +38,6 @@ async def showcase_insert_universal(client, showcase, data):
     ) as kp:
         for row in data:
             try:
-
                 obj = PD_class(**row)
                 data_create = obj.dict(exclude_none=True)
                 kp.put_data(
