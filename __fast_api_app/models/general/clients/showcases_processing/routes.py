@@ -26,7 +26,7 @@ DEFAULT_PROC_CONFIGURE = {
 }
 
 router = APIRouter(
-    prefix="/showcases/clients_data",
+    prefix="/showcases/clients-data",
     tags=["INDIVIDUAL-API"],
     responses={404: {"description": "Not found"}},
     dependencies=[Depends(verify_token)]
@@ -42,7 +42,7 @@ class ClientProcessorNotFound(Exception):
 """
 
 
-@router.post("/individual_input/{client_key}/{showcase_name}")
+@router.post("/individual-input/{client_key}/{showcase_name}")
 @standardize_response
 async def ind_post_client_data_from_body_to_showcase(client_key: str, showcase_name: str, body=Body(...)):
     """
@@ -58,7 +58,7 @@ async def ind_post_client_data_from_body_to_showcase(client_key: str, showcase_n
     return result
 
 
-@router.post("/individual_input/{client_key}/{showcase_name}/file")
+@router.post("/individual-input/{client_key}/{showcase_name}/file")
 @standardize_response
 async def ind_post_client_data_from_file_to_showcase(client_key: str, showcase_name: str, file: bytes = File(...)):
     """
@@ -75,7 +75,7 @@ async def ind_post_client_data_from_file_to_showcase(client_key: str, showcase_n
     return result
 
 
-@router.post("/individual_input/{client_key}/{showcase_name}/long_file")
+@router.post("/individual-input/{client_key}/{showcase_name}/long_file")
 @standardize_response
 async def ind_post_client_data_from_long_file_to_showcase(client_key: str, showcase_name: str, file: UploadFile = File(...)):
     """
@@ -116,7 +116,7 @@ async def ind_post_client_data_to_showcase(client_key, showcase_name, json_in):
     return result
 
 
-@router.post("/individual_output/{client_key}/{showcase_name}")
+@router.post("/individual-output/{client_key}/{showcase_name}")
 @standardize_response
 async def ind_get_client_data_from_showcase(client_key: str, showcase_name: str, body: Optional[dict] = None):
     """
