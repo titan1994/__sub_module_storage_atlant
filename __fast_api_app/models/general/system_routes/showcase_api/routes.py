@@ -1,10 +1,15 @@
 from fastapi import APIRouter, Body, Depends, File, UploadFile
 from fastapi_pagination import Params, paginate
+
 from MODS.standart_namespace.routes import standardize_response
+
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
 from .tools.insert import showcase_insert_universal, INSERT_EXAMPLE
-from json import loads as jsl
-import ijson
+from .tools.input_formats import FormatTypes
+
+DEFAULT_KAFKA_BATCH_FLUSH = 10000
+DEFAULT_KAFKA_USE_TX = False
+DEFAULT_KAFKA_DATA_KEY = None
 
 router = APIRouter(
     prefix="/showcases-api/clients-data",
@@ -50,48 +55,51 @@ async def select_union_route(
     return result
 
 
-@router.post("/insert-universal/{client}/{showcase}/file/small/")
+@router.post("/insert-universal/{client}/{showcase}/file-small/json/")
 @standardize_response
 async def insert_route(
         client: str, showcase: str,
-        body: bytes = File(...),
-        auto_flushing: int = 10000,
-        use_tx: bool = False,
-        kafka_key: str = None):
+        file: bytes = File(...),
+        auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
+        use_tx: bool = DEFAULT_KAFKA_USE_TX,
+        kafka_key: str = DEFAULT_KAFKA_DATA_KEY):
     """
     Универсальный маршрут для вставки данных в витрину
     """
-    body = jsl(body)
-    result = await showcase_insert_universal(client, showcase, body, auto_flushing, use_tx, kafka_key)
+
+    result = await showcase_insert_universal(client, showcase, file, auto_flushing, use_tx, kafka_key,
+                                             FormatTypes("file-small/json/"))
     return result
 
 
-@router.post("/insert-universal/{client}/{showcase}/file/long/")
+@router.post("/insert-universal/{client}/{showcase}/file-long/json/")
 @standardize_response
 async def insert_route(
         client: str, showcase,
         file: UploadFile = File(...),
-        auto_flushing: int = 10000,
-        use_tx: bool = False,
-        kafka_key: str = None):
+        auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
+        use_tx: bool = DEFAULT_KAFKA_USE_TX,
+        kafka_key: str = DEFAULT_KAFKA_DATA_KEY):
     """
     Универсальный маршрут для вставки данных в витрину
     """
-    json_async = ijson.items(file, 'item')
-    result = await showcase_insert_universal(client, showcase, json_async, auto_flushing, use_tx, kafka_key, True)
+
+    result = await showcase_insert_universal(client, showcase, file, auto_flushing, use_tx, kafka_key,
+                                             FormatTypes("file-long/json/"))
     return result
 
 
-@router.post("/insert-universal/{client}/{showcase}/json/body/")
+@router.post("/insert-universal/{client}/{showcase}/body/json/")
 @standardize_response
 async def insert_route(
         client: str, showcase,
         body=Body(..., example=INSERT_EXAMPLE),
-        auto_flushing: int = 10000,
-        use_tx: bool = False,
-        kafka_key: str = None):
+        auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
+        use_tx: bool = DEFAULT_KAFKA_USE_TX,
+        kafka_key: str = DEFAULT_KAFKA_DATA_KEY):
     """
     Универсальный маршрут для вставки данных в витрину
     """
-    result = await showcase_insert_universal(client, showcase, body, auto_flushing, use_tx, kafka_key)
+    result = await showcase_insert_universal(client, showcase, body, auto_flushing, use_tx, kafka_key,
+                                             FormatTypes("body/json/"))
     return result
