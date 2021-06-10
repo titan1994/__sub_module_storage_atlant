@@ -51,8 +51,26 @@ class InsertShowcase(ABC):
         await self.get_metadata()
         self.columns_to_pd_attr()
         self.validators_create()
-        self.columns_to_pd_attr()
-        self.create_connection_kafka()
+        self.create_pd_model()
+
+        # До КАФКИ
+        self.data_transform()
+
+        # if input_format in [FormatTypes.body_json, FormatTypes.file_small_json]:
+        #
+        #     if input_format == FormatTypes.file_small_json:
+        #         data = jsl(data)
+        #
+        #     if isinstance(data, dict):
+        #         # если это одна запись - надо сделать список из неё
+        #         data = [data]
+        #
+        # elif input_format == FormatTypes.file_large_json:
+        #     data = ijson.items(data, 'item')
+        # else:
+        #     raise ValueError(f'Unsupported format types data {input_format}')
+
+        # self.create_connection_kafka() WITH
         await self.validate_send_kafka()
         return self.summary_report
 
@@ -66,6 +84,18 @@ class InsertShowcase(ABC):
         self.kafka_topic = metadata['kafka_topic_name']
         self.columns_clickhouse = metadata['target_table']['columns']
 
+    def columns_to_pd_attr(self) -> dict:
+        """
+        Преобразует типы данных кликхауса в питонячьи
+        """
+        new_columns = {}
+        for name, value in self.columns_clickhouse.items():
+            if value['type'] in self.types_mapping.keys():
+                if name not in self.required:
+                    new_columns[name] = (Optional[self.types_mapping[value['type']]], None)
+                else:
+                    new_columns[name] = (self.types_mapping[value['type']], ...)
+        self.columns = new_columns
 
     def validators_create(self) -> dict:
         """
@@ -81,28 +111,15 @@ class InsertShowcase(ABC):
                 validators[name + 'validator'] = validator(name, allow_reuse=True)(uint_valid)
         self.validators = validators
 
-    def columns_to_pd_attr(self) -> dict:
-        """
-        Преобразует типы данных кликхауса в питонячьи
-        """
-        new_columns = {}
-        for name, value in self.columns_clickhouse.items():
-            if value['type'] in self.types_mapping.keys():
-                if name not in self.required:
-                    new_columns[name] = (Optional[self.types_mapping[value['type']]], None)
-                else:
-                    new_columns[name] = (self.types_mapping[value['type']], ...)
-        self.columns = new_columns
-
     def create_pd_model(self):
         self.PD_class = create_model('PD_{0}_{1}'.format(self.client, self.showcase), **self.columns,
                                      __validators__=self.validators)
 
-    def create_connection_kafka(self):
-        self.KP = KafkaProducerConfluent(
-                use_tx=self.use_tx,
-                one_topic_name=self.kafka_topic,
-                auto_flush_size=self.auto_flush)
+    # def create_connection_kafka(self):
+    #     self.KP = KafkaProducerConfluent(
+    #             use_tx=self.use_tx,
+    #             one_topic_name=self.kafka_topic,
+    #             auto_flush_size=self.auto_flush)
 
 
     def send_to_kafka(self, data):
@@ -128,6 +145,10 @@ class InsertShowcase(ABC):
     async def validate_send_kafka(self) -> dict:
         pass
 
+    @abstractmethod
+    async def data_transform(self) -> dict:
+        pass
+
 
 class InsertFileLarge(InsertShowcase):
     """
@@ -135,6 +156,7 @@ class InsertFileLarge(InsertShowcase):
     """
     async def validate_send_kafka(self) -> dict:
         async for row in self.data:
+
             self.send_to_kafka(row)
         return self.summary_report
 
