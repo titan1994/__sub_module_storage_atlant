@@ -4,51 +4,87 @@ from .settings import get_showcase_data
 from pydantic import create_model
 from MODS.DRIVERS.kafka_proc.driver import KafkaProducerConfluent
 from .validators import datetime_valid, uuid_valid, uint_valid
-from GENERAL_CONFIG import GeneralConfig
-from pydantic import validator, BaseModel
+from pydantic import validator
 from typing import Optional
+from asyncio import iscoroutine
 
-CONST_KAFKA_DATA_KEY = 'FROM_API'
-CONST_USE_TX_CL_DATA_INPUT = False
+types_mapping = {
+    'String': str,
+    'Int32': int,
+    'Int16': int,
+    'Int8': int,
+    'Int4': int,
+    'Int64': int,
+    'UInt32': int,
+    'UInt16': int,
+    'UInt8': int,
+    'UInt4': int,
+    'UInt64': int,
+    'Float32': float,
+    'Float64': float,
+    'Date': str,
+    'DateTime': str,
+    'UUID': str,
+}
+
+INSERT_EXAMPLE = {
+    "INN": "112233",
+    "Size": 1,
+    "MaxPart": 1000
+}
 
 
-async def showcase_insert_universal(client, showcase, data):
+async def showcase_insert_universal(client, showcase, data, auto_flush, use_tx, kafka_key, async_check=False):
     """
+    asunc_check - True если файл большой и data нужно читать асинхронно
     функция для вставки данных в витрину через кафку
     Вход - имя клиента, имя витрины, данные для вставки
     Шаг 1. Проверить есть ли такая витрина, получить имя топика кафки
     Шаг 2. Создать класс Pydantic и валидировать данные
     Шаг 3. Отправить данные в кафку
+    return суммарный отчёт
     """
     summary_report = {
         'success_showcase': 0,
         'error_in_showcase': 0,
     }
-
     metadata = await get_showcase_data(client, showcase)
+    if kafka_key is None:
+        kafka_key = metadata['ycl_table_showcase_data']
     columns = columns_to_pd_attr(metadata['target_table']['columns'], metadata['target_table']['order_by'])
     validators = validators_create(metadata['target_table']['columns'])
     PD_class = create_model('PD_{0}_{1}'.format(client, showcase), **columns, __validators__=validators)
-    if not isinstance([], list):
+    if isinstance(data, dict):  # если это одна запись - надо сделать список из неё
         data = [data]
     with KafkaProducerConfluent(
-            use_tx=CONST_USE_TX_CL_DATA_INPUT,
+            use_tx=use_tx,
             one_topic_name=metadata['kafka_topic_name'],
-            auto_flush_size=1000
+            auto_flush_size=auto_flush
     ) as kp:
-        for row in data:
-            try:
-                obj = PD_class(**row)
-                data_create = obj.dict(exclude_none=True)
-                kp.put_data(
-                    key=CONST_KAFKA_DATA_KEY,
-                    value=data_create
-                )
-                summary_report['success_showcase'] = summary_report['success_showcase'] + 1
-            except Exception as exp:
-                summary_report['error_in_showcase'] = summary_report['error_in_showcase'] + 1
+        if async_check:  # проверка на ассинхронность data - если файл большой - читаем лениво
+            async for row in data:
+                summary_report = process_one_object(PD_class, row, kp, kafka_key, summary_report)
+        else:
+            for row in data:
+                summary_report = process_one_object(PD_class, row,  kp, kafka_key, summary_report)
+
     return summary_report
 
+def process_one_object(PD_class, row,  kp, kafka_key, summary_report):
+    """
+    Валидация и отправка в кафку
+    """
+    try:
+        obj = PD_class(**row)
+        data_create = obj.dict(exclude_none=True)
+        kp.put_data(
+            key=kafka_key,
+            value=data_create
+        )
+        summary_report['success_showcase'] = summary_report['success_showcase'] + 1
+    except Exception as exp:
+        summary_report['error_in_showcase'] = summary_report['error_in_showcase'] + 1
+    return summary_report
 
 def columns_to_pd_attr(columns: dict, required: list) -> dict:
     """
@@ -77,29 +113,3 @@ def validators_create(columns: dict) -> dict:
         if 'UInt' in value['type']:
             validators[name + 'validator'] = validator(name, allow_reuse=True)(uint_valid)
     return validators
-
-
-types_mapping = {
-    'String': str,
-    'Int32': int,
-    'Int16': int,
-    'Int8': int,
-    'Int4': int,
-    'Int64': int,
-    'UInt32': int,
-    'UInt16': int,
-    'UInt8': int,
-    'UInt4': int,
-    'UInt64': int,
-    'Float32': float,
-    'Float64': float,
-    'Date': str,
-    'DateTime': str,
-    'UUID': str,
-}
-
-INSERT_EXAMPLE = {
-    "INN":"112233",
-    "Size":1,
-    "MaxPart":1000
-}
