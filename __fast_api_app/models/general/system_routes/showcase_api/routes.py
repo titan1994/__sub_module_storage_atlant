@@ -6,7 +6,7 @@ from MODS.standart_namespace.routes import standardize_response
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
 from .tools.insert import showcase_insert_universal, INSERT_EXAMPLE
 from .tools.input_formats import FormatTypes
-from .tools.BaseInsert import InsertBodyJson
+from .tools.BaseInsert import InsertBodyJson, InsertFileLarge, InsertFileSmall
 
 DEFAULT_KAFKA_BATCH_FLUSH = 10000
 DEFAULT_KAFKA_USE_TX = False
@@ -68,8 +68,14 @@ async def insert_route(
     Универсальный маршрут для вставки данных в витрину
     """
 
-    result = await showcase_insert_universal(client, showcase, file, auto_flushing, use_tx, kafka_key,
-                                             FormatTypes("file-small/json/"))
+    result = await InsertFileSmall(
+        client,
+        showcase,
+        file,
+        auto_flushing,
+        use_tx,
+        kafka_key
+    ).insert()
     return result
 
 
@@ -85,8 +91,14 @@ async def insert_route(
     Универсальный маршрут для вставки данных в витрину
     """
 
-    result = await showcase_insert_universal(client, showcase, file, auto_flushing, use_tx, kafka_key,
-                                             FormatTypes("file-long/json/"))
+    result = await InsertFileLarge(
+        client,
+        showcase,
+        file,
+        auto_flushing,
+        use_tx,
+        kafka_key
+    ).insert()
     return result
 
 
