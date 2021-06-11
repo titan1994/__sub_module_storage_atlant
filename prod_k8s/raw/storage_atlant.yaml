@@ -11,8 +11,10 @@ data:
   jsonb_connect: aHR0cDovLzEwLjEwNy4yMzkuMTY3OjUxMTIvc3RydWN0dXJlLw==
   ycl_connect: Y2xpY2tob3VzZTovL2RlZmF1bHQ6QDEwLjExMC4xMDkuMTQyOjkwMDAvZGVmYXVsdA==
   kafka_connect: MTAuMTA4LjAuMTMwOjkwOTI=
+  key_auth: Ym9Gc2s5aWUxbF9FOFBnV0JiVXJTU3dMeEVneEN3a1poU25zRXR4ampBZz01UEwzMWs1RFhYdUdZem1MeVpXUTVySy1zNTQ5WjFkRTM3MU91ZkVjSDN3PQ==
 
 ---
+
 # Требование волюма PVC. Мигратор
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -37,9 +39,8 @@ spec:
   resources:
     requests:
       storage: 300Mi
-
-
 ---
+
 
 # Деплой
 apiVersion: apps/v1
@@ -51,7 +52,6 @@ metadata:
     contact_telegram: "89004930206"
     app: storage-atlant-service
     function: ycl-kafka-psql-storage
-
 spec:
   selector:
     matchLabels:
@@ -71,6 +71,10 @@ spec:
           value: "True"
         - name: PYTHONPATH
           value: "/__sub_module_storage_atlant"
+        - name: CORS_WHITE_LIST
+          value: "*"
+        - name: CORS_ALLOW_CREDENTIALS
+          value: True
 
         - name: DATABASE_SETTINGS_URL_DOCKER
           valueFrom:
@@ -96,7 +100,13 @@ spec:
               name: storage-atlant-secrets
               key: kafka_connect
 
-       volumeMounts:
+        - name: SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: storage-atlant-secrets
+              key: key_auth
+
+        volumeMounts:
           - name: storage-migration
             mountPath: /__sub_module_storage_atlant/__migrations/
           - name: storage-fast-api
