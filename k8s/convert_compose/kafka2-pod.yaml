@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.network/general_network_all_services: "true"
+    io.kompose.service: kafka2
+  name: kafka2
+spec:
+  containers:
+  - env:
+    - name: KAFKA_ADVERTISED_LISTENERS
+      value: LISTENER_DOCKER_INTERNAL://kafka2:19092,LISTENER_DOCKER_EXTERNAL://127.0.0.1:9092
+    - name: KAFKA_BROKER_ID
+      value: "2"
+    - name: KAFKA_INTER_BROKER_LISTENER_NAME
+      value: LISTENER_DOCKER_INTERNAL
+    - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+      value: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+    - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+      value: "1"
+    - name: KAFKA_ZOOKEEPER_CONNECT
+      value: zookeeper:2181
+    image: confluentinc/cp-kafka:5.3.0
+    name: kafka2
+    ports:
+    - containerPort: 9092
+    resources: {}
+  hostname: kafka2
+  restartPolicy: OnFailure
+status: {}

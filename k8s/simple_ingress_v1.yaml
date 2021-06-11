@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: depweb
+  labels:
+    app: my-app
+spec:
+#  replicas: 3 - не нужна когда есть автоскейлинг
+  selector:
+    matchLabels:
+      app: my-app-label  # Это метка пода, для балансера
+  template:
+    metadata:
+      labels:
+        app: my-app-label  # Это метка пода, для балансера
+    spec:
+      containers:
+      - name: my-app-container
+        image: adv4000/k8sphp:version2
+        ports:
+        - containerPort: 80
+
+# Автоскейлер для деплоя
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-autoscaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: depweb  #Имя деплоя
+    apiVersion: apps/v1
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
+
+
+---
+#This specification creates a new Service object named "my-service", which targets TCP port 9376 on any Pod with the app=MyApp label.
+apiVersion: v1
+kind: Service
+metadata:
+  name: depweb
+  labels:
+    env: prod
+spec:
+  type: NodePort
+  selector:
+    app: my-app-label  # Это лейбл пода
+  ports:
+    - name: app-listner
+      protocol: TCP
+      port: 8080      # Порт на этом сервисе
+      targetPort: 80  # Порт открываемый на ноде (порт контейнера)
+
+# Ингресс контроллер
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+
+spec:
+  rules:
+    - http:
+        paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: depweb
+              port:
+                number: 8080

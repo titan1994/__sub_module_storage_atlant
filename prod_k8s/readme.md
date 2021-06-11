@@ -66,4 +66,6 @@ kubectl port-forward svc/clickhouse 8123:8123
 kubectl apply -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\storage_atlant.yaml
 kubectl delete -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\storage_atlant.yaml
 kubectl port-forward svc/storage-atlant-service 5111:5111
+
+kubectl rollout restart deployment/storage-atlant-service 
 ```

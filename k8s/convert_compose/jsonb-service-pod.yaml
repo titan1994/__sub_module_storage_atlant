@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.network/general_network_all_services: "true"
+    io.kompose.service: jsonb-service
+  name: jsonb-service
+spec:
+  containers:
+  - env:
+    - name: CLICKHOUSE_SHOWCASE_URL_DOCKER
+      valueFrom:
+        configMapKeyRef:
+          key: CLICKHOUSE_SHOWCASE_URL_DOCKER
+          name: env-development
+    - name: DATABASE_SETTINGS_URL_DOCKER
+      valueFrom:
+        configMapKeyRef:
+          key: DATABASE_SETTINGS_URL_DOCKER
+          name: env-development
+    - name: ITS_DOCKER
+      value: "True"
+    - name: JAVA_KEY_VALUE_JSONB_URL
+      valueFrom:
+        configMapKeyRef:
+          key: JAVA_KEY_VALUE_JSONB_URL
+          name: env-development
+    - name: KAFKA_URL_DOCKER
+      valueFrom:
+        configMapKeyRef:
+          key: KAFKA_URL_DOCKER
+          name: env-development
+    - name: PYTHONPATH
+      valueFrom:
+        configMapKeyRef:
+          key: PYTHONPATH
+          name: env-development
+    image: atom1994/jsonb_service
+    name: jsonb-service
+    ports:
+    - containerPort: 5112
+    resources: {}
+  restartPolicy: OnFailure
+status: {}

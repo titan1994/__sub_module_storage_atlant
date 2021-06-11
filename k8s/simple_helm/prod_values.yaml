@@ -1,0 +1,5 @@
+container:
+  image: adv4000/k8sphp:version2
+
+replicaCountMin: 3
+replicaCountMax: 4

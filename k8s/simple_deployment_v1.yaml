@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: depweb
+  labels:
+    app: my-app
+spec:
+#  replicas: 3 - не нужна когда есть автоскейлинг
+  selector:
+    matchLabels:
+      app: my-app-label
+  template:
+    metadata:
+      labels:
+        app: my-app-label
+    spec:
+      containers:
+      - name: my-app-container
+        image: adv4000/k8sphp:version2
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-app-autoscaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: depweb
+    apiVersion: apps/v1
+  minReplicas: 3
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80

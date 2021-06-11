@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-depweb
+  labels:
+    app: my-app
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-my-app-label  # Это метка пода, для балансера
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-my-app-label  # Это метка пода, для балансера
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-my-app-container
+        image: {{ .Values.container.image }}
+        ports:
+        - containerPort: 80
+
+# Автоскейлер для деплоя
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-my-app-autoscaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: {{ .Release.Name }}-depweb  #Имя деплоя
+    apiVersion: apps/v1
+  minReplicas: {{ .Values.replicaCountMin }}
+  maxReplicas: {{ .Values.replicaCountMax }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
+
+
+---
+#This specification creates a new Service object named "my-service", which targets TCP port 9376 on any Pod with the app=MyApp label.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-depweb
+  labels:
+    env: prod
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Release.Name }}-my-app-label  # Это лейбл пода
+  ports:
+    - name: {{ .Release.Name }}-listner
+      protocol: TCP
+      port: 8080      # Порт на балансировщике
+      targetPort: 80  # Порт открываемый на ноде

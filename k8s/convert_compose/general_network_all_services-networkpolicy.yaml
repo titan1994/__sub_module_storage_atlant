@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: general_network_all_services
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          io.kompose.network/general_network_all_services: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/general_network_all_services: "true"
