@@ -1,0 +1,159 @@
+# Сервис JSON-B
+
+# Секрет - коннектор к базе данных
+apiVersion: v1
+kind: Secret
+metadata:
+  name: storage-atlant-secrets
+type: Opaque
+data:
+  psql_connect: cG9zdGdyZXNxbDovL19fdGVzdF9hcHBfY29yZTpfX3Rlc3RfYXBwX2NvcmVAMTAuOTcuMTgzLjMyOjU0MzIvX190ZXN0X2FwcF9jb3Jl
+  jsonb_connect: aHR0cDovLzEwLjEwNy4yMzkuMTY3OjUxMTIvc3RydWN0dXJlLw==
+  ycl_connect: Y2xpY2tob3VzZTovL2RlZmF1bHQ6QDEwLjExMC4xMDkuMTQyOjkwMDAvZGVmYXVsdA==
+  kafka_connect: MTAuMTA4LjAuMTMwOjkwOTI=
+
+---
+# Требование волюма PVC. Мигратор
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-atlant-claim-migration
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi
+
+---
+# Требование волюма PVC. Роуты и НСИ-ОРМ, FastAPI app
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: storage-atlant-claim-fast-api
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 300Mi
+
+
+---
+
+# Деплой
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storage-atlant-service
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: storage-atlant-service
+    function: ycl-kafka-psql-storage
+
+spec:
+  selector:
+    matchLabels:
+      app: storage-atlant-label
+  template:
+    metadata:
+      labels:
+        app: storage-atlant-label
+    spec:
+      containers:
+      - name: storage-atlant-container
+        image: atom1994/storage_atlant
+        ports:
+        - containerPort: 5111
+        env:
+        - name: ITS_DOCKER
+          value: "True"
+        - name: PYTHONPATH
+          value: "/__sub_module_storage_atlant"
+
+        - name: DATABASE_SETTINGS_URL_DOCKER
+          valueFrom:
+            secretKeyRef:
+              name: storage-atlant-secrets
+              key: psql_connect
+
+        - name: JAVA_KEY_VALUE_JSONB_URL
+          valueFrom:
+            secretKeyRef:
+              name: storage-atlant-secrets
+              key: jsonb_connect
+
+        - name: CLICKHOUSE_SHOWCASE_URL_DOCKER
+          valueFrom:
+            secretKeyRef:
+              name: storage-atlant-secrets
+              key: ycl_connect
+
+        - name: KAFKA_URL_DOCKER
+          valueFrom:
+            secretKeyRef:
+              name: storage-atlant-secrets
+              key: kafka_connect
+
+       volumeMounts:
+          - name: storage-migration
+            mountPath: /__sub_module_storage_atlant/__migrations/
+          - name: storage-fast-api
+            mountPath: /__sub_module_storage_atlant/__fast_api_app/models/general/NSI
+
+      volumes:
+        - name: storage-migration
+          persistentVolumeClaim:
+            claimName: storage-atlant-claim-migration
+        - name: storage-fast-api
+          persistentVolumeClaim:
+            claimName: storage-atlant-claim-fast-api
+
+---
+
+# Сервис
+apiVersion: v1
+kind: Service
+metadata:
+  name: storage-atlant-service
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: storage-atlant-service
+    function: ycl-kafka-psql-storage
+spec:
+  type: LoadBalancer
+  selector:
+    app: storage-atlant-label
+  ports:
+    - name: "5111"
+      protocol: TCP
+      port: 5111
+      targetPort: 5111
+
+
+---
+
+# Автоскелер
+
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: storage-atlant-autoscaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: storage-atlant-service
+    apiVersion: apps/v1
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80

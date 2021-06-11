@@ -1,0 +1,44 @@
+# Требования волюмов и волюм для кликхауса
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: middle-storage-volume
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    function: middle-storage
+spec:
+  capacity:
+    storage: 25Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/middle-storage-volume/
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clickhouse-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: clickhouse-logs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

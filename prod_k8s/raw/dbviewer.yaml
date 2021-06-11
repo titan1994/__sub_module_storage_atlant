@@ -1,0 +1,49 @@
+# Кафка дроп - визуальный интерфейс просмотра
+
+# Деплой
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbviewer
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: dbviewer
+    function: monitoring-db
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbviewer-label
+  template:
+    metadata:
+      labels:
+        app: dbviewer-label
+    spec:
+      containers:
+      - name: dbviewer-container
+        image: dbeaver/cloudbeaver
+        ports:
+        - containerPort: 8978
+
+# Сервис
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbviewer
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: dbviewer
+    function: monitoring-db
+spec:
+  type: LoadBalancer
+  selector:
+    app: dbviewer-label
+  ports:
+    - name: "8978"
+      protocol: TCP
+      port: 8978
+      targetPort: 8978

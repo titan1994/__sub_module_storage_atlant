@@ -1,0 +1,10 @@
+clickhouse:
+  persistentVolumeClaim:
+    dataPersistentVolume:
+      enabled: True
+      accessModes: ReadWriteOnce
+      storage: 10Gi
+    logsPersistentVolume:
+      enabled: True
+      accessModes: ReadWriteOnce
+      storage: 10Gi

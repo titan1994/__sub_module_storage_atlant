@@ -1,0 +1,54 @@
+# Кафка дроп - визуальный интерфейс просмотра
+
+# Деплой
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafdrop
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: kafdrop
+    function: monitoring-kafka
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafdrop-label
+  template:
+    metadata:
+      labels:
+        app: kafdrop-label
+    spec:
+      containers:
+      - name: kafdrop-container
+        image: obsidiandynamics/kafdrop
+        ports:
+        - containerPort: 9001
+        env:
+          - name: KAFKA_BROKERCONNECT
+            value: kafka-bit:9092
+          - name: SERVER_PORT
+            value: "9001"
+
+# Сервис
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafdrop
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    app: kafdrop
+    function: monitoring-kafka
+spec:
+  type: LoadBalancer
+  selector:
+    app: kafdrop-label
+  ports:
+    - name: "9001"
+      protocol: TCP
+      port: 9001
+      targetPort: 9001

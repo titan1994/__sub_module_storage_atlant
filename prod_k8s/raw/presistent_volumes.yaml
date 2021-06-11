@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: simple-storage-volume
+  labels:
+    mentor: IvanKozlov
+    contact_telegram: "89004930206"
+    function: simple-storage
+spec:
+  capacity:
+    storage: 15Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/simple-storage-volume/

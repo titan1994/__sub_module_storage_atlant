@@ -1,0 +1,7 @@
+postgresqlPassword: __test_app_core
+postgresqlUsername: __test_app_core
+postgresqlDatabase: __test_app_core
+
+persistence:
+  existingClaim: psql-volume
+
