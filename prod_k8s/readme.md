@@ -56,12 +56,14 @@ kubectl port-forward svc/jsonb-service 5112:5112
 kubectl apply -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\ycl_pvc.yaml
 helm install clickhouse liwenhe/clickhouse -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\ycl_values.yaml
 helm delete clickhouse 
+kubectl delete -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\ycl_pvc.yaml
 kubectl port-forward svc/clickhouse 9000:9000
+kubectl port-forward svc/clickhouse 8123:8123
 ```
 
 ## Подымаем основной сервис Хранилище АТЛАНТ
 ```
 kubectl apply -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\storage_atlant.yaml
 kubectl delete -f C:\Users\i.kozlov.CORP\Desktop\PyPro\__sub_module_storage_atlant\prod_k8s\raw\storage_atlant.yaml
-kubectl port-forward svc/jsonb-service 5112:5112
+kubectl port-forward svc/storage-atlant-service 5111:5111
 ```

@@ -1,4 +1,6 @@
 clickhouse:
+  image: yandex/clickhouse-server
+  imageVersion: latest
   persistentVolumeClaim:
     dataPersistentVolume:
       enabled: True

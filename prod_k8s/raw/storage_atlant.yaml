@@ -8,9 +8,9 @@ metadata:
 type: Opaque
 data:
   psql_connect: cG9zdGdyZXNxbDovL19fdGVzdF9hcHBfY29yZTpfX3Rlc3RfYXBwX2NvcmVAMTAuOTcuMTgzLjMyOjU0MzIvX190ZXN0X2FwcF9jb3Jl
-  jsonb_connect: aHR0cDovLzEwLjEwNy4yMzkuMTY3OjUxMTIvc3RydWN0dXJlLw==
-  ycl_connect: Y2xpY2tob3VzZTovL2RlZmF1bHQ6QDEwLjExMC4xMDkuMTQyOjkwMDAvZGVmYXVsdA==
-  kafka_connect: MTAuMTA4LjAuMTMwOjkwOTI=
+  jsonb_connect: aHR0cDovL2pzb25iLXNlcnZpY2U6NTExMi9zdHJ1Y3R1cmUv
+  ycl_connect: Y2xpY2tob3VzZTovL2RlZmF1bHQ6QGNsaWNraG91c2U6OTAwMC9kZWZhdWx0
+  kafka_connect: a2Fma2EtYml0OjkwOTI=
   key_auth: Ym9Gc2s5aWUxbF9FOFBnV0JiVXJTU3dMeEVneEN3a1poU25zRXR4ampBZz01UEwzMWs1RFhYdUdZem1MeVpXUTVySy1zNTQ5WjFkRTM3MU91ZkVjSDN3PQ==
 
 ---
@@ -74,7 +74,7 @@ spec:
         - name: CORS_WHITE_LIST
           value: "*"
         - name: CORS_ALLOW_CREDENTIALS
-          value: True
+          value: "True"
 
         - name: DATABASE_SETTINGS_URL_DOCKER
           valueFrom:

@@ -3,6 +3,7 @@ from fastapi_pagination import Params, paginate
 
 from MODS.standart_namespace.routes import standardize_response
 
+from ...system_routes.auth.tools import verify_token
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
 
 from .tools.BaseInsert import \
@@ -19,6 +20,7 @@ router = APIRouter(
     prefix="/showcases-api/clients-data",
     tags=["CLIENTS-API"],
     responses={404: {"description": "Not found"}},
+    dependencies=[Depends(verify_token)]
 )
 
 
