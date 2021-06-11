@@ -9,10 +9,16 @@ from .validators import uint_valid, uuid_valid, datetime_valid
 
 from MODS.DRIVERS.kafka_proc.driver import KafkaProducerConfluent
 
+INSERT_EXAMPLE = {
+    "INN": "112233",
+    "Size": 1,
+    "MaxPart": 1000
+}
+
 
 class InsertShowcase(ABC):
     """
-    Шаблоннный класс для вставки данных в витрину
+    Шаблонный класс для вставки данных в витрину
     Имеет методы общие для каждого класса
     Имеет методы, которые обязательно нужно реализовать в наследниках
     """
@@ -60,8 +66,6 @@ class InsertShowcase(ABC):
             await self.validate_send_kafka()
         return self.summary_report
 
-    # Эти операции уже имеют реализации.
-
     async def get_metadata(self):
         """
         Получает данные о витрине из стороннего хранилища
@@ -88,7 +92,7 @@ class InsertShowcase(ABC):
 
     def validators_create(self):
         """
-        Тут в зависимости от поля вешаются на них валидационные функции
+        Тут в зависимости от поля вешаются на колонки валидационные функции
         """
         validators = {}
         for name, value in self.columns_clickhouse.items():
@@ -104,8 +108,12 @@ class InsertShowcase(ABC):
         """
         Создаём класс pydantic для валидации
         """
-        self.PD_class = create_model('PD_{0}_{1}'.format(self.client, self.showcase), **self.columns,
-                                     __validators__=self.validators)
+
+        self.PD_class = create_model(
+            'PD_{0}_{1}'.format(self.client, self.showcase),
+            **self.columns,
+            __validators__=self.validators
+        )
 
     def create_connection_kafka(self):
         """
@@ -114,12 +122,13 @@ class InsertShowcase(ABC):
         return KafkaProducerConfluent(
             use_tx=self.use_tx,
             one_topic_name=self.kafka_topic,
-            auto_flush_size=self.auto_flush)
+            auto_flush_size=self.auto_flush
+        )
 
     def send_to_kafka(self, data):
         """
-        Отправление строки в кафку
-
+        Отправление словаря в кафку. Один словарь = одна запись.
+        То есть это отправление одной записи
         """
         try:
             data = self.validate_get_dict(data)
@@ -139,7 +148,6 @@ class InsertShowcase(ABC):
         data_create = obj.dict(exclude_none=True)
         return data_create
 
-    # А эти операции должны быть реализованы в подклассах.
     @abstractmethod
     def data_transform(self):
         """
@@ -151,7 +159,7 @@ class InsertShowcase(ABC):
     async def validate_send_kafka(self):
         """
         тут вызывать self.send_to_kafka(row) для каждой записи,
-        которую надо положитьв кафку
+        которую надо положить в кафку
         """
         pass
 
@@ -176,6 +184,8 @@ class InsertFileSmall(InsertShowcase):
 
     def data_transform(self):
         self.data = jsl(self.data)
+        if isinstance(self.data, dict):
+            self.data = [self.data]
 
     async def validate_send_kafka(self):
         for row in self.data:

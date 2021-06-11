@@ -4,9 +4,12 @@ from fastapi_pagination import Params, paginate
 from MODS.standart_namespace.routes import standardize_response
 
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
-from .tools.insert import showcase_insert_universal, INSERT_EXAMPLE
-from .tools.input_formats import FormatTypes
-from .tools.BaseInsert import InsertBodyJson, InsertFileLarge, InsertFileSmall
+
+from .tools.BaseInsert import \
+    INSERT_EXAMPLE,\
+    InsertBodyJson, \
+    InsertFileLarge, \
+    InsertFileSmall
 
 DEFAULT_KAFKA_BATCH_FLUSH = 10000
 DEFAULT_KAFKA_USE_TX = False
