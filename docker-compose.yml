@@ -235,7 +235,7 @@ services:
 
      - ./__migrations:/__sub_module_storage_atlant/__migrations/
 
-     - ./__fast_api_app:/__sub_module_storage_atlant/__fast_api_app/
+     - ./__fast_api_app/models/general/NSI:/__sub_module_storage_atlant/__fast_api_app/models/general/NSI/
 
      - ./data_launch_system:/__sub_module_storage_atlant/data_launch_system/
 
