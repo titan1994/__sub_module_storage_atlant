@@ -40,7 +40,7 @@ COPY ./MODS .
 
 
 # Открываем волюмы
-VOLUME /__sub_module_storage_atlant/__migrations/ __sub_module_storage_atlant/__fast_api_app/models/general/NSI/ /__sub_module_storage_atlant/data_launch_system/ /__sub_module_storage_atlant/__test_data/
+VOLUME /__sub_module_storage_atlant/__migrations/ /__sub_module_storage_atlant/__fast_api_app/models/general/NSI/ /__sub_module_storage_atlant/data_launch_system/ /__sub_module_storage_atlant/__test_data/
 
 # Открываем порт
 EXPOSE 5111

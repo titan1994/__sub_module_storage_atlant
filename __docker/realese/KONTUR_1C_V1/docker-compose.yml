@@ -20,7 +20,7 @@ services:
 
     volumes:
 
-     - ./__jsonb_docker_migrations:/jsonb_service/__migrations/
+     - ./__jsonb_docker_migrations:/jsonb_service/__migrations
 
     env_file:
       - .env.development
@@ -35,14 +35,14 @@ services:
   farmer_passport:
     image: atom1994/storage_atlant
     restart: on-failure
-    container_name: farmer_passport
+    container_name: storage_atlant
 
     volumes:
     
-     - ./__migrations:/cl_smpb/__migrations/
-     - ./data_launch_system:/cl_smpb/data_launch_system/
-     - ./NSI:/cl_smpb/__fast_api_app/models/general/NSI/
-     - ./__test_data:/cl_smpb/__test_data/
+     - ./__migrations:/__sub_module_storage_atlant/__migrations/
+     - ./data_launch_system:/__sub_module_storage_atlant/data_launch_system/
+     - ./NSI:/__sub_module_storage_atlant/__fast_api_app/models/general/NSI/
+     - ./__test_data:/__sub_module_storage_atlant/__test_data/
 
 
     env_file:
