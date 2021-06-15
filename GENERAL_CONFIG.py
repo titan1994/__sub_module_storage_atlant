@@ -78,3 +78,4 @@ class GeneralConfig(FastApiConfig, AtlantStorageCfg):
     ITS_DOCKER = None
     PROJECT_GENERAL_FOLDER = general_path
     DEFAULT_WORKER_COUNT = cpu_count() + 1
+    PROJECT_TABLE_NAMESPACE_PREFIX = None

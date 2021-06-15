@@ -36,6 +36,9 @@ def first_init():
         else:
             GeneralConfig.YCL_KAFKA_URL = GeneralConfig.KAFKA_URL
 
+    # Префикс проекта
+    GeneralConfig.PROJECT_TABLE_NAMESPACE_PREFIX = getenv('PROJECT_TABLE_NAMESPACE_PREFIX')
+
     print('ASGI INIT')
 
 

@@ -1,0 +1,61 @@
+version: '3'
+
+
+
+# Общая сеть между разными микросервисами (композами)
+networks:
+  default:
+   external:
+    name: general_network_all_services
+
+
+# Сервисы
+services:
+
+#  Сервис-хранилище метаданных JSON-B
+  jsonb_service:
+    image: atom1994/jsonb_service
+    restart: on-failure
+    container_name: jsonb_service
+
+    volumes:
+
+     - ./__jsonb_docker_migrations:/jsonb_service/__migrations/
+
+    env_file:
+      - .env.development
+
+    environment:
+      ITS_DOCKER: "True"
+
+    network_mode: host
+
+
+  # Ядро
+  farmer_passport:
+    image: atom1994/storage_atlant
+    restart: on-failure
+    container_name: farmer_passport
+
+    volumes:
+    
+     - ./__migrations:/cl_smpb/__migrations/
+     - ./data_launch_system:/cl_smpb/data_launch_system/
+     - ./NSI:/cl_smpb/__fast_api_app/models/general/NSI/
+     - ./__test_data:/cl_smpb/__test_data/
+
+
+    env_file:
+      - .env.development
+
+    environment:
+      ITS_DOCKER: "True"
+
+    depends_on:
+
+     - jsonb_service
+     
+    network_mode: host
+
+
+

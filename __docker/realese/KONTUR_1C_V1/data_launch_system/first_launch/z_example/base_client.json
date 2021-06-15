@@ -1,0 +1,410 @@
+{
+  "Farmer passport": {
+    "human_name": "Паспорт фермера",
+    "author": "Иван Козлов 17.05.2021",
+    "showcases": {
+      "means of passport": {
+        "human_name": "Значения паспорта КФХ",
+        "relation_dicts": {
+          "organizations": {
+            "relation_keys": [
+              "organization"
+            ]
+          },
+          "type_values": {
+            "relation_keys": [
+              "type"
+            ]
+          },
+          "economic_indicators": {
+            "relation_keys": [
+              "economic_indicator"
+            ]
+          },
+          "source_forms": {
+            "relation_keys": [
+              "source_form"
+            ]
+          },
+          "source_systems": {
+            "relation_keys": [
+              "source_system"
+            ]
+          },
+          "periods": {
+            "relation_keys": [
+              "period"
+            ]
+          },
+          "subjects_rf": {
+            "relation_keys": [
+              "subject"
+            ]
+          }
+        },
+        "kafka_settings_queue": {
+          "kafka_num_consumers": 1,
+          "kafka_thread_per_consumer": 0,
+          "kafka_format": "JSONEachRow",
+          "kafka_row_delimiter": "\n"
+        },
+        "engine": "MergeTree()",
+        "order_by": [
+          "organization"
+        ],
+        "columns": {
+          "organization": {
+            "human_name": "Организация (ИНН)",
+            "type": "String"
+          },
+          "subject": {
+            "human_name": "Субъект Российской Федерации",
+            "type": "String"
+          },
+          "period": {
+            "human_name": "Период",
+            "type": "String"
+          },
+          "source_system": {
+            "human_name": "Система источник",
+            "type": "String"
+          },
+          "source_form": {
+            "human_name": "Форма источник",
+            "type": "String"
+          },
+          "type": {
+            "human_name": "Тип данных",
+            "type": "String"
+          },
+          "economic_indicator": {
+            "human_name": "Экономический показатель",
+            "type": "String"
+          },
+          "code_score_ispkgp": {
+            "human_name": "Код показателя в Своде/ИСПКГП",
+            "type": "String"
+          },
+          "code_score_iscsapk": {
+            "human_name": "Код показателя ИС ЦС АПК",
+            "type": "String"
+          },
+          "data_generate": {
+            "human_name": "Дата формирования",
+            "type": "DateTime64"
+          },
+          "value": {
+            "human_name": "Значение показателя",
+            "type": "Float64"
+          }
+        }
+      }
+    },
+    "dictionaries": {
+      "organizations": {
+        "human_name": "Организации",
+        "columns": [
+          {
+            "system_name": "INN",
+            "human_name": "Идентификатор организации",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "subject",
+            "human_name": "Субъект Российской Федерации",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "OKTMO",
+            "human_name": "ОКТМО",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "contacts",
+            "human_name": "Контакты",
+            "data_type": "TextField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "KFH_registration_data",
+            "human_name": "Дата регистрации КФХ",
+            "data_type": "DatetimeField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "KFH_registration_address",
+            "human_name": "Адрес регистрации",
+            "data_type": "TextField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "KFH_full_name",
+            "human_name": "ФИО главы КФХ",
+            "data_type": "TextField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "KFH_general_old",
+            "human_name": "Возраст главы КФХ",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "grant_name",
+            "human_name": "Наименование грантополучателя",
+            "data_type": "TextField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "grant_type",
+            "human_name": "Вид гранта",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "grant_year",
+            "human_name": "Год получения гранта",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "grant_size",
+            "human_name": "Размер  полученного гранта, рублей",
+            "data_type": "FloatField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "grant_amount_own_funds",
+            "human_name": "Объем собственных средств грантополучателя",
+            "data_type": "FloatField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "grant_amount_borrowed_funds",
+            "human_name": " в том числе заемные",
+            "data_type": "FloatField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "grant_OKWED_KFH",
+            "human_name": "Основной ОКВЭД КФХ",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "grant_OKWED_type",
+            "human_name": "Вид деятельности по ОКВЭД, на который получен грант",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "grant_project_cost",
+            "human_name": "Стоимость проекта, представленного на конкурсный отбор",
+            "data_type": "FloatField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "type_values": {
+        "human_name": "Типы значения (План/Факт)",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "126"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "economic_indicators": {
+        "human_name": "Экономические показатели",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "TextField",
+            "is_primary_key": true
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "npp",
+            "human_name": "Номер по порядку",
+            "data_type": "IntField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "parent",
+            "human_name": "Родитель",
+            "data_type": "TextField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "source_forms": {
+        "human_name": "Формы источника",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "126"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "property",
+            "human_name": "Приоритет",
+            "data_type": "IntField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "source_systems": {
+        "human_name": "Системы источника",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "periods": {
+        "human_name": "Периоды",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "type_grants": {
+        "human_name": "Виды гранта",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          }
+        ]
+      },
+      "subjects_rf": {
+        "human_name": "Субъекты РФ",
+        "columns": [
+          {
+            "system_name": "name",
+            "human_name": "Наименование",
+            "data_type": "CharField",
+            "is_primary_key": true,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "code",
+            "human_name": "Код",
+            "data_type": "IntField",
+            "is_primary_key": false
+          },
+          {
+            "system_name": "federal_district",
+            "human_name": "Федеральный округ",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          },
+          {
+            "system_name": "OKTMO",
+            "human_name": "ОКТМО",
+            "data_type": "CharField",
+            "is_primary_key": false,
+            "additional": {
+              "max_length": "255"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
