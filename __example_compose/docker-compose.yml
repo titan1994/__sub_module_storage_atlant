@@ -211,7 +211,7 @@ services:
      - ./__jsonb_docker_migrations:/jsonb_service/__migrations/
 
     env_file:
-      - .env.development
+      - .env.jsonb
 
     environment:
       ITS_DOCKER: "True"
