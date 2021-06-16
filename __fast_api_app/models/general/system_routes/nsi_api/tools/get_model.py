@@ -16,7 +16,6 @@ class ORMProcessingError(Exception):
 async def get_some(client_key, dict_name, **kwargs):
     """
     Получить список моделей, одну модель с фильтрацией.
-    Пока что есть только получение списка без фильтра
     """
     state = await tortoise_state.state_check()
     if not state:
@@ -40,3 +39,13 @@ async def get_some(client_key, dict_name, **kwargs):
 
     res = jsonable_encoder(model_list)
     return res
+
+
+async def get_count_of_row(client_key, dict_name):
+    state = await tortoise_state.state_check()
+    if not state:
+        await tortoise_state.state_activate()
+    class_model = get_orm_class(client_key=client_key, dict_name=dict_name)
+    if not class_model:
+        raise ORMProcessingError('Model not found!')
+    return await class_model.all().count()

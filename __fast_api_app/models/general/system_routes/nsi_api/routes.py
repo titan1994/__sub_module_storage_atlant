@@ -8,7 +8,7 @@ from fastapi_pagination import Params, paginate
 from MODS.standart_namespace.routes import standardize_response
 
 from .tools.create_model import create_some
-from .tools.get_model import get_some
+from .tools.get_model import get_some, get_count_of_row
 from .tools.delete_model import delete_some
 from ...system_routes.auth.tools import verify_token
 
@@ -198,5 +198,18 @@ async def orm_delete_model_list_by_pk(client_key: str, dict_name: str, pk: str):
         client_key=client_key,
         dict_name=dict_name,
         filter={"pk": pk}
+    )
+    return res
+
+
+@router.get("/{client_key}/{dict_name}/row-count")
+@standardize_response
+async def get_row_count(client_key: str, dict_name: str):
+    """
+    Узнать, сколько строк в таблице
+    """
+    res = await get_count_of_row(
+        client_key=client_key,
+        dict_name=dict_name
     )
     return res
