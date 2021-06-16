@@ -30,13 +30,13 @@ def get_password_hash(password):
 
 
 if getattr(GeneralConfig, 'SECRET_KEY', None):
-    async def verify_token(token = Depends(oauth2_scheme)):
+    async def verify_token(token=Depends(oauth2_scheme)):
         token_db = await Token.filter(token=token).first()
         if token_db:
             if token_db.is_active:
                 return True
         raise HTTPException(status_code=403, detail='Bad token')
 else:
-    async def verify_token(token = Depends(None)):
+    async def verify_token(token=Depends(None)):
         pass
 

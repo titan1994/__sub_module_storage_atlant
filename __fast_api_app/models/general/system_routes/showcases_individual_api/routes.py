@@ -9,7 +9,7 @@ from json import loads as jsl
 from fastapi import APIRouter, Body, Depends, File, UploadFile
 from MODS.standart_namespace.routes import standardize_response
 from MODS.storage_atlant_driver.pack_core.psql_jsonb.connector import get_client
-from __fast_api_app.models.general.system_routes.auth.tools import verify_token
+from ..auth.tools import verify_token
 
 from MODS.storage_atlant_driver.pack_core.main import \
     DEFAULT_META_NAME_SHOWCASE, \
