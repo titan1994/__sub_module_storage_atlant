@@ -5,6 +5,7 @@ from MODS.standart_namespace.routes import standardize_response
 
 from ...system_routes.auth.tools import verify_token
 from .tools.select import showcase_select_base, showcase_select_union, EXAMPLE_SELECT_BASE, EXAMPLE_SELECT_UNION
+from .tools.delete import showcase_delete_base
 
 from .tools.BaseInsert import \
     INSERT_EXAMPLE,\
@@ -63,7 +64,7 @@ async def select_union_route(
 
 @router.post("/insert-universal/{client}/{showcase}/file-small/json/")
 @standardize_response
-async def insert_route(
+async def insert_route_filesmall_json(
         client: str, showcase: str,
         file: bytes = File(...),
         auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
@@ -86,7 +87,7 @@ async def insert_route(
 
 @router.post("/insert-universal/{client}/{showcase}/file-long/json/")
 @standardize_response
-async def insert_route(
+async def insert_route_filelong_json(
         client: str, showcase,
         file: UploadFile = File(...),
         auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
@@ -109,7 +110,7 @@ async def insert_route(
 
 @router.post("/insert-universal/{client}/{showcase}/body/json/")
 @standardize_response
-async def insert_route(
+async def insert_route_body_json(
         client: str, showcase,
         body=Body(..., example=INSERT_EXAMPLE),
         auto_flushing: int = DEFAULT_KAFKA_BATCH_FLUSH,
@@ -126,4 +127,22 @@ async def insert_route(
         use_tx,
         kafka_key
     ).insert()
+    return result
+
+
+
+@router.delete("/delete-from-table/{client}/{showcase}/")
+@standardize_response
+async def delete_from_table(
+        client: str,
+        showcase: str,
+        body_filters=Body(..., example=INSERT_EXAMPLE)):
+    """
+    Универсальный маршрут для удаления данных из витрин
+    """
+    result = await showcase_delete_base(
+        client,
+        showcase,
+        body_filters
+    )
     return result
