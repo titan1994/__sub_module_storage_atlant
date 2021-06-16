@@ -46,7 +46,7 @@ services:
 
 
     env_file:
-      - .env.development
+      - .env.storage
 
     environment:
       ITS_DOCKER: "True"
