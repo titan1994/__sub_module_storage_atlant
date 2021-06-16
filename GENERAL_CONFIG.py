@@ -79,3 +79,6 @@ class GeneralConfig(FastApiConfig, AtlantStorageCfg):
     PROJECT_GENERAL_FOLDER = general_path
     DEFAULT_WORKER_COUNT = cpu_count() + 1
     PROJECT_TABLE_NAMESPACE_PREFIX = None
+
+    # Индивидуальное апи проекта
+    ATLANT_STORAGE_INDIVIDUAL_API_FOLDER = general_path / '__fast_api_app' / 'ind_api'

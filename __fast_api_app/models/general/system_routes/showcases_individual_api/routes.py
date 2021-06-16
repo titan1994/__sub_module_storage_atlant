@@ -6,11 +6,10 @@ import importlib.util
 from typing import Optional
 from json import loads as jsl
 
-
 from fastapi import APIRouter, Body, Depends, File, UploadFile
 from MODS.standart_namespace.routes import standardize_response
 from MODS.storage_atlant_driver.pack_core.psql_jsonb.connector import get_client
-from ...system_routes.auth.tools import verify_token
+from __fast_api_app.models.general.system_routes.auth.tools import verify_token
 
 from MODS.storage_atlant_driver.pack_core.main import \
     DEFAULT_META_NAME_SHOWCASE, \
@@ -19,6 +18,8 @@ from MODS.storage_atlant_driver.pack_core.main import \
 """
 Конфиг
 """
+
+from GENERAL_CONFIG import GeneralConfig
 
 DEFAULT_PROC_CONFIGURE = {
     'POST_DATA': ['input_data.py', 'client_post_processing_data'],
@@ -50,9 +51,9 @@ async def ind_post_client_data_from_body_to_showcase(client_key: str, showcase_n
     """
 
     result = await ind_post_client_data_to_showcase(
-        client_key = client_key,
-        showcase_name = showcase_name,
-        json_in = body
+        client_key=client_key,
+        showcase_name=showcase_name,
+        json_in=body
     )
 
     return result
@@ -67,9 +68,9 @@ async def ind_post_client_data_from_file_to_showcase(client_key: str, showcase_n
 
     json_in = jsl(file)
     result = await ind_post_client_data_to_showcase(
-        client_key = client_key,
-        showcase_name = showcase_name,
-        json_in = json_in
+        client_key=client_key,
+        showcase_name=showcase_name,
+        json_in=json_in
     )
 
     return result
@@ -77,15 +78,16 @@ async def ind_post_client_data_from_file_to_showcase(client_key: str, showcase_n
 
 @router.post("/individual-input/{client_key}/{showcase_name}/long_file")
 @standardize_response
-async def ind_post_client_data_from_long_file_to_showcase(client_key: str, showcase_name: str, file: UploadFile = File(...)):
+async def ind_post_client_data_from_long_file_to_showcase(client_key: str, showcase_name: str,
+                                                          file: UploadFile = File(...)):
     """
     Индивидуальная вставка данных в витрину - через файл размером больше 5 Мб
     """
 
     result = await ind_post_client_data_to_showcase(
-        client_key = client_key,
-        showcase_name = showcase_name,
-        json_in = file
+        client_key=client_key,
+        showcase_name=showcase_name,
+        json_in=file
     )
 
     return result
@@ -143,7 +145,6 @@ async def ind_get_client_data_from_showcase(client_key: str, showcase_name: str,
         json_in=body
     )
 
-
     return result
 
 
@@ -187,7 +188,7 @@ def get_client_module(client_key, module_name):
     """
     Поиск модуля обработчика для клиента
     """
-    folder_processing = Path(__file__).parent / client_key
+    folder_processing = Path(GeneralConfig.ATLANT_STORAGE_INDIVIDUAL_API_FOLDER) / client_key
     if not folder_processing.exists():
         raise ClientProcessorNotFound(f'{client_key} processor folder not found!')
 
@@ -199,5 +200,3 @@ def get_client_module(client_key, module_name):
     spec.loader.exec_module(mod)
 
     return mod
-
-
