@@ -66,7 +66,7 @@ async def orm_get_model_list(client_key: str, dict_name: str):
     return res
 
 
-@router.post("{client_key}/{dict_name}/filter")
+@router.post("/{client_key}/{dict_name}/filter")
 @standardize_response
 async def orm_get_model_list_filter(
         client_key: str,
@@ -85,7 +85,7 @@ async def orm_get_model_list_filter(
     return res
 
 
-@router.get("{client_key}/{dict_name}/{pk}")
+@router.get("/{client_key}/{dict_name}/{pk}")
 @standardize_response
 async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: str):
     """
@@ -169,7 +169,7 @@ async def orm_post_model_list(
 """
 
 
-@router.delete("{client_key}/{dict_name}/filter")
+@router.delete("/{client_key}/{dict_name}/filter")
 @standardize_response
 async def orm_delete_model_list_filter(
         client_key: str,
@@ -188,7 +188,7 @@ async def orm_delete_model_list_filter(
     return res
 
 
-@router.delete("{client_key}/{dict_name}/{pk}")
+@router.delete("/{client_key}/{dict_name}/{pk}")
 @standardize_response
 async def orm_delete_model_list_by_pk(client_key: str, dict_name: str, pk: str):
     """
