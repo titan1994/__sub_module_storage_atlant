@@ -85,7 +85,7 @@ async def orm_get_model_list_filter(
     return res
 
 
-@router.get("/{client_key}/{dict_name}/{pk}")
+@router.get("/object/{client_key}/{dict_name}/{pk}")
 @standardize_response
 async def orm_get_model_by_pk(client_key: str, dict_name: str, pk: str):
     """
@@ -109,11 +109,13 @@ async def orm_get_model_list_page(
     """
     Универсальное получение списка с пагинацией
     """
-
+    print('hello')
     res = await get_some(
         client_key=client_key,
         dict_name=dict_name,
+        filter= None,
     )
+
     page = paginate(res, params).json()
     return page
 
