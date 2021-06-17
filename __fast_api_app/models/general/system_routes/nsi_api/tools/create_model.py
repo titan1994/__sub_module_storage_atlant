@@ -7,6 +7,9 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 from pydantic import ValidationError
 from MODS.rest_core.pack_core.system_models.system_models import tortoise_state
 from MODS.storage_atlant_driver.pack_core.main import get_orm_class
+from MODS.DRIVERS.data_base.async_click_house.ycl import system_reload_dictionaries
+from GENERAL_CONFIG import GeneralConfig
+from MODS.storage_atlant_driver.pack_core.main import ycl_get_connection_settings
 
 
 class ORMCreateError(Exception):
@@ -30,6 +33,8 @@ async def create_some(client_key, dict_name, body):
 
     pyd_model = pydantic_model_creator(class_model)
 
+    table_names = [class_model.describe()['table']]
+
     global_response = []
     if isinstance(body, dict):
         # Вставка одного объекта
@@ -52,6 +57,12 @@ async def create_some(client_key, dict_name, body):
                 soft_insert=True
             )
             global_response.append(res)
+
+    conn = ycl_get_connection_settings(GeneralConfig.CLICKHOUSE_SHOWCASE_URL)
+    try:
+        await system_reload_dictionaries(conn=conn, names=table_names)
+    except Exception:
+        pass
 
     return global_response
 
